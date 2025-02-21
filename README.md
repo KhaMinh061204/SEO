@@ -20,13 +20,13 @@ Ceecin Movie Ticket Booking Website là một website giúp người dùng dễ 
 git clone https://github.com/KhaMinh061204/Ceecin-Movie-Ticket-Booking-Website.git
 ### 📦 2. Cài đặt và chạy
 **Frontend**: 
-cd frontend
-npm i
-npm run dev
-Truye cập: http://localhost:3001/
+- cd frontend
+- npm i
+- npm run dev
+- Truy cập: http://localhost:3001/
 
 **Backend**:
-cd frontend
-npm i
-Tạo file .env
-npm start
+- cd frontend
+- npm i
+- Tạo file .env
+- npm start
