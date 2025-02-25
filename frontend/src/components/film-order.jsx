@@ -1,7 +1,12 @@
 function FilmOrder({showtime,seats}){
+    if (!showtime || !showtime.movie_id || !showtime.screening_room_id || !showtime.screening_room_id.theater_id) {
+        return ;
+    }
+   
     const dateTime = new Date(showtime.date); // start_time là trường chứa thời gian
     const formattedTime = `${dateTime.getUTCHours()}h${dateTime.getUTCMinutes().toString().padStart(2, "0")}’ - ${dateTime.getUTCDate()}/${dateTime.getUTCMonth() + 1}/${dateTime.getUTCFullYear()}`;
     const seatNames = seats.map(seat => `${seat.row}${seat.number}`).join(", ");
+    
     return(
         <div className="flex w-100 cenver gap10 mt-30" style={{"border":"1px solid white","borderRadius":"5px","fontSize":"14px","color":"white","backgroundColor":"#ffffff3d", "padding":"1%"}}>
                 <div >
@@ -9,8 +14,8 @@ function FilmOrder({showtime,seats}){
                 </div>
                 <div style={{"flex":"1","backgroundColor":"#00000099","padding":"15px","borderRadius":"10px"}}>
                     <div className="flex spa-bet-ver cenhor">
-                        <h1 className="product-name" style={{"fontSize":"40px"}}>{showtime.movie_id.title}</h1>
-                        <p className="text-badge" style={{"backgroundColor":"#B28FFF"}}>{showtime.movie_id.limit_age}</p>
+                        <h1 className="product-name" style={{"fontSize":"40px"}}>{showtime.movie_id.title}</h1> 
+                        <p className="text-badge" style={{"backgroundColor":"#B28FFF"}}>{showtime.movie_id.limit_age}</p> 
                     </div>
                     <div className="flex f-col gap20" style={{"padding":"5px"}}>
                         <div className="flex startver cenhor gap20">

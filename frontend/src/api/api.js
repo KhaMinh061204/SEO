@@ -2,7 +2,7 @@ import axios from "axios";
 
 // axios.defaults.baseURL = 'http://localhost:8081'
 
-const BASE_URL = 'http://localhost:8081'
+const BASE_URL = 'https://ceecine.onrender.com'
 export const getMoviesInHomepage = async () => {
   const res = await axios.get(`${BASE_URL}/movie`).catch((err) => console.log(err));
 
@@ -85,7 +85,7 @@ export const getFoodList = async () => {
 }
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8081',
+  baseURL: 'https://ceecine.onrender.com',
   headers: {
     'Content-Type': 'application/json',
   },
