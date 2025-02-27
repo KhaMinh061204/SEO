@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './VoucherCardneba.css';
-import logo from '../../assets/img/Logo.png'
+import logo from '../../assets/img/logo.png'
 
 const VoucherCardneba = ({ title, description, expiryDate, isSelected, onClick}) => {
   return (
