@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import "./PopUp.css";
 import { BookingContext } from "../Context";
-import logo from "../../assets/img/Logo.png";
+import logo from "../../assets/img/logo.png";
 import qrCodeImage from "../../assets/img/QR_code.png"; // Đường dẫn tới hình ảnh QR
 
 const PopUP = () => {
