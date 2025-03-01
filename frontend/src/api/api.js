@@ -12,7 +12,12 @@ const checkLocalBackend = async () => {
   }
 };
 
-let BASE_URL = await checkLocalBackend(); 
+let BASE_URL = PROD_BACKEND; 
+
+checkLocalBackend().then((url) => {
+  BASE_URL = url; 
+});
+ 
 
 export const getMoviesInHomepage = async () => {
   const res = await axios.get(`${BASE_URL}/movie`).catch((err) => console.log(err));
