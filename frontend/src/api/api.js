@@ -1,9 +1,19 @@
 import axios from "axios";
 
-// axios.defaults.baseURL = 'http://localhost:8081'
+const LOCAL_BACKEND = "http://localhost:8081";
+const PROD_BACKEND = "https://ceecine.onrender.com";
 
-// const BASE_URL = 'https://ceecine.onrender.com'
-const BASE_URL = 'http://localhost:8081'
+const checkLocalBackend = async () => {
+  try {
+    const res = await fetch(`${LOCAL_BACKEND}/healthcheck`, { method: "GET", mode: "no-cors" });
+    return res.ok ? LOCAL_BACKEND : PROD_BACKEND;
+  } catch (error) {
+    return PROD_BACKEND;
+  }
+};
+
+let BASE_URL = await checkLocalBackend(); 
+
 export const getMoviesInHomepage = async () => {
   const res = await axios.get(`${BASE_URL}/movie`).catch((err) => console.log(err));
 
@@ -86,8 +96,7 @@ export const getFoodList = async () => {
 }
 
 const axiosInstance = axios.create({
-  // baseURL: 'https://ceecine.onrender.com',
-  baseURL: 'http://localhost:8081',
+  baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
