@@ -14,6 +14,8 @@ import bookingRouter from "./routers/booking-router.js";
 import ticketRouter from "./routers/ticket-router.js";
 import path from "path";
 import { fileURLToPath } from "url";
+import swaggerUi from "swagger-ui-express";
+import YAML from "yamljs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,6 +23,8 @@ const __dirname = path.dirname(__filename);
 dotenv.config();
 
 const app = express();
+const swaggerDocument = YAML.load("./swagger.yaml");
+
 mongoose.connect(`mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0.1qcpp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`)
     .then(() =>
         app.listen(8081, () => {
@@ -42,6 +46,7 @@ app.use("/food", FoodRouter)
 app.use("/theater", TheaterRouter)
 app.use("/ticket", ticketRouter)
 app.use("/booking", bookingRouter)
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
 

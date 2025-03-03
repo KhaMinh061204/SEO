@@ -1,0 +1,1212 @@
+openapi: 3.0.3
+info:
+  title: Ceecine
+  description: API documentation of CeeCine
+  
+  version: 1.0.11
+
+servers:
+  - url: http://localhost:8081
+  - url: https://ceecine.onrender.com/
+tags:
+  - name: account
+    description: auth API
+  - name: booking
+    description: booking API
+  - name: coupon
+    description: coupon API
+  - name: food
+    description: food API
+  - name: movie
+    description: movie API
+  - name: promotion
+    description: promotion API
+  - name: seat
+    description: seat API
+  - name: showtime
+    description: showtime API
+  - name: theater
+    description: theater API
+  - name: ticket
+    description: ticket API
+
+paths:
+  /account/register:
+    post:
+      tags:
+        - account
+      summary: Register a new account
+      description: Creates a new user account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Account registered successfully
+        '400':
+          description: Invalid request data/ Email already exists
+        '500':
+          description: Internal server error
+
+  /account/login:
+    post:
+      tags:
+        - account
+      summary: User login
+      description: Authenticates a user and returns an access token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful, returns JWT token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '400':
+          description: Invalid credentials
+        '404':
+          description: Account does not exist
+        '500':
+          description: Internal server error
+
+  /account/profile:
+    get:
+      tags:
+        - account
+      summary: Get user profile
+      description: Retrieves the profile information of the authenticated user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+
+  /account/logout:
+    post:
+      tags:
+        - account
+      summary: User logout
+      description: Logs out the current user
+      responses:
+        '200':
+          description: Logout successful
+        '500':
+          description: Internal server error
+
+  /account/forgot-password:
+    post:
+      tags:
+        - account
+      summary: Forgot password
+      description: Sends a password reset OTP to the user's email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+      responses:
+        '200':
+          description: OTP sent successfully
+        '400':
+          description: Email not registered
+        '500':
+          description: Internal server error
+
+  /account/verify-otp:
+    post:
+      tags:
+        - account
+      summary: Verify OTP
+      description: Verifies the OTP sent for password reset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                otp:
+                  type: string
+                  example: "123456"
+      responses:
+        '200':
+          description: OTP verified successfully
+        '400':
+          description: Invalid or expired OTP
+        '500':
+          description: Internal server error
+
+  /account/reset-password:
+    post:
+      tags:
+        - account
+      summary: Reset password
+      description: Resets the user's password after verifying OTP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                otp:
+                  type: string
+                new_password:
+                  type: string
+      responses:
+        '200':
+          description: Password reset successfully
+        '400':
+          description: Invalid request data
+        '500':
+          description: Internal server error
+
+  /account/update-profile:
+    put:
+      tags:
+        - account
+      summary: Update user profile
+      description: Updates the authenticated user's profile information
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileRequest'
+      responses:
+        '200':
+          description: Profile updated successfully
+        '400':
+          description: Invalid request data
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+
+  /account/admin/login:
+    post:
+      tags:
+        - account
+      summary: Admin login
+      description: Authenticates an admin user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful, returns JWT token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '400':
+          description: Invalid credentials
+        '429':
+          description: Too many login attempts
+        '500':
+          description: Internal server error
+
+  /account/update-avatar:
+    post:
+      tags:
+        - account
+      summary: Update user avatar
+      description: Uploads and updates the user's avatar
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                avatar:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Avatar updated successfully
+        '400':
+          description: Invalid file format
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+
+  /coupon:
+    get:
+      tags:
+        - coupon
+      summary: Get all coupons
+      description: Retrieves a list of available coupons
+      responses:
+        '200':
+          description: List of coupons retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Coupon'
+        '500':
+          description: Internal server error
+
+  /coupon/check:
+    post:
+      tags:
+        - coupon
+      summary: Check a coupon validity
+      description: Verifies if a given coupon is valid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CouponCheckRequest'
+      responses:
+        '200':
+          description: Coupon check result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CouponCheckResponse'
+        '400':
+          description: Invalid request format
+        '404':
+          description: Coupon not found
+        '500':
+          description: Internal server error
+
+  /booking:
+    post:
+      tags:
+        - booking
+      summary: Create a booking
+      description: Creates a new booking (Requires authentication)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingRequest'
+      responses:
+        '201':
+          description: Booking created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingResponse'
+        '400':
+          description: Invalid request body
+        '401':
+          description: Unauthorized
+        '422':
+          description: Validation error
+        '500':
+          description: Internal server error
+
+    get:
+      tags:
+        - booking
+      summary: Get booking details
+      description: Retrieves booking details (Requires authentication)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: user_id
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter bookings by user ID
+      responses:
+        '200':
+          description: Booking retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookingResponse'
+        '400':
+          description: Invalid query parameters
+        '401':
+          description: Unauthorized
+        '404':
+          description: Booking not found
+        '500':
+          description: Internal server error
+
+  /food/:
+    get:
+      tags:
+        - food
+      summary: Check a coupon validity
+      description: Verifies if a given coupon is valid
+      responses:
+        '200':
+          description: Coupon check result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+        '400':
+          description: Invalid request format
+        '404':
+          description: Coupon not found
+        '500':
+          description: Internal server error
+          
+  /movie:
+    get:
+      tags:
+        - movie
+      summary: Get movies for homepage
+      description: Retrieves a list of movies for homepage display
+      responses:
+        '200':
+          description: List of movies retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movie'
+        '500':
+          description: Internal server error
+
+    post:
+      tags:
+        - movie
+      summary: Add a new movie
+      description: Adds a new movie to the database
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MovieRequest'
+      responses:
+        '201':
+          description: Movie added successfully
+        '400':
+          description: Invalid request body
+        '500':
+          description: Internal server error
+
+  /movie/all:
+    get:
+      tags:
+        - movie
+      summary: Get all movies
+      description: Retrieves a complete list of all movies
+      responses:
+        '200':
+          description: List of all movies retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movie'
+        '500':
+          description: Internal server error
+
+  /movie/search:
+    get:
+      tags:
+        - movie
+      summary: Search movies
+      description: Searches for movies based on query parameters
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Search keyword for movie title
+      responses:
+        '200':
+          description: Search results retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movie'
+        '400':
+          description: Invalid search parameters
+        '500':
+          description: Internal server error
+
+  /movie/{id}:
+    get:
+      tags:
+        - movie
+      summary: Get movie details
+      description: Retrieves details of a specific movie
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Movie ID
+      responses:
+        '200':
+          description: Movie details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+        '404':
+          description: Movie not found
+        '500':
+          description: Internal server error
+
+    put:
+      tags:
+        - movie
+      summary: Edit a movie
+      description: Updates details of an existing movie
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Movie ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MovieRequest'
+      responses:
+        '200':
+          description: Movie updated successfully
+        '400':
+          description: Invalid request body
+        '404':
+          description: Movie not found
+        '500':
+          description: Internal server error
+
+    delete:
+      tags:
+        - movie
+      summary: Delete a movie
+      description: Deletes a movie from the database
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Movie ID
+      responses:
+        '200':
+          description: Movie deleted successfully
+        '404':
+          description: Movie not found
+        '500':
+          description: Internal server error
+
+  /movie/{id}/showtimes:
+    get:
+      tags:
+        - showtime
+      summary: Get showtime information by movie id
+      description: Retrieves showtime information for a specific movie
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Movie ID
+      responses:
+        '200':
+          description: Showtime and theater info retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Showtime'
+        '404':
+          description: Movie not found
+        '500':
+          description: Internal server error
+
+    post:
+      tags:
+        - showtime
+      summary: Add a new showtime
+      description: Adds a new showtime for a specific movie
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Movie ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShowtimeRequest'
+      responses:
+        '201':
+          description: Showtime added successfully
+        '400':
+          description: Invalid request body
+        '500':
+          description: Internal server error
+
+  /movie/{id}/showtimes/{showtimeId}:
+    put:
+      tags:
+        - showtime
+      summary: Edit a showtime
+      description: Updates details of a specific showtime
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Movie ID
+        - name: showtimeId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Showtime ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShowtimeRequest'
+      responses:
+        '200':
+          description: Showtime updated successfully
+        '400':
+          description: Invalid request body
+        '404':
+          description: Showtime not found
+        '500':
+          description: Internal server error
+
+    delete:
+      tags:
+        - showtime
+      summary: Delete a showtime
+      description: Deletes a specific showtime
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Movie ID
+        - name: showtimeId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Showtime ID
+      responses:
+        '200':
+          description: Showtime deleted successfully
+        '404':
+          description: Showtime not found
+        '500':
+          description: Internal server error
+    
+  /promotion:
+    get:
+      summary: Get promotions for homepage
+      tags:
+        - promotion
+      responses:
+        '200':
+          description: Successfully retrieved promotions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Promotion'
+
+  /promotion/all:
+    get:
+      summary: Get all promotions
+      tags:
+        - promotion
+      responses:
+        '200':
+          description: Successfully retrieved all promotions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Promotion'
+
+  /promotion/add:
+    post:
+      summary: Add a new promotion
+      tags:
+        - promotion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Promotion'
+      responses:
+        '201':
+          description: Promotion added successfully
+
+  /seat/{id}:
+    put:
+      summary: Update seat status
+      tags:
+        - seat
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Seat'
+      responses:
+        '200':
+          description: Seat updated successfully
+
+  /seat/{roomId}:
+    get:
+      summary: Get seats by room ID
+      tags:
+        - seat
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved seats
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Seat'
+
+  /theater/all:
+    get:
+      summary: Get all theaters
+      tags:
+        - theater
+      responses:
+        '200':
+          description: Successfully retrieved all theaters
+
+  /theater/add:
+    post:
+      summary: Add a new theater
+      tags:
+        - theater
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Theater'
+      responses:
+        '201':
+          description: Theater added successfully
+        '400':
+          description: Brand not fount
+        '500': 
+          description: Internal Server Error          
+
+  /theater/{id}:
+    put:
+      summary: Update theater details
+      tags:
+        - theater
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Theater'
+      responses:
+        '200':
+          description: Theater updated successfully
+
+    delete:
+      summary: Delete a theater
+      tags:
+        - theater
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Theater deleted successfully
+
+  /theater/{id}/rooms:
+    get:
+      summary: Get rooms by theater ID
+      tags:
+        - theater
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved rooms
+
+  /user:
+    get:
+      summary: Get user info
+      tags:
+        - user
+      responses:
+        '200':
+          description: Successfully retrieved user info
+  
+  /ticket:
+    post:
+      summary: create new ticket
+      description: API to create new ticket, User authentication required
+      security:
+        - bearerAuth: []
+      tags:
+        - ticket
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TicketRequest"
+      responses:
+        201:
+          description: Vé được tạo thành công
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TicketResponse"
+        400:
+          description: Invalid request body
+        401:
+          description: User not authenticated
+        404:
+          description: User not found
+        500:
+          description: Server error
+
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      
+  schemas:
+    RegisterRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone: 
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        gender: 
+          type: string
+          enum: [Nam, Nữ, Khác]
+        password:
+          type: string
+      required:
+        - name
+        - email
+        - phone
+        - dateOfBirth
+        - gender
+        - password
+
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          format: email
+        password:
+          type: string
+      required:
+        - email
+        - password
+
+    UserProfile:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone: 
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        gender: 
+          type: string  
+          enum: [Nam, Nữ, Khác]
+        avatar:
+          type: string
+          nullable: true
+      required:
+        - name
+        - email
+        - phone
+        - dateOfBirth
+        - gender
+        - avatar
+
+    UpdateProfileRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone: 
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        gender: 
+          type: string
+        
+    Coupon:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Coupon code
+        discount:
+          type: number
+          description: Discount percentage
+        expires_at:
+          type: string
+          format: date-time
+          description: Expiration date of the coupon
+      required:
+        - code
+        - discount
+        - expires_at
+
+    CouponCheckRequest:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Coupon code to check
+      required:
+        - code
+
+    CouponCheckResponse:
+      type: object
+      properties:
+        valid:
+          type: boolean
+          description: Whether the coupon is valid
+        discount:
+          type: number
+          description: Discount percentage (if valid)
+      required:
+        - valid
+
+    BookingRequest:
+      type: object
+      properties:
+        accountId:
+          type: string
+          description: ID of the user making the booking
+        ticket_ids:
+          type: string
+          description: ID of the ticket
+        fandb_items:
+          type: string
+          description: ID of fandb_items
+      required:
+        - accountId
+        - ticket_ids
+        - fandb_items
+
+    BookingResponse:
+      type: object
+      properties:
+        booking_id:
+          type: string
+          description: Unique ID for the booking
+        accountId:
+          type: string
+          description: ID of the user making the booking
+        ticket_ids:
+          type: string
+          description: ID of the ticket
+        fandb_items:
+          type: string
+          description: ID of fandb_items
+        status:
+          type: string
+          format: boolean
+          description: Status of the booking
+      required:
+        - booking_id
+        - accountId
+        - ticket_ids
+        - fandb_items
+        - status
+          
+    Movie:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        duration:
+          type: string
+        genre:
+          type: string
+        rating:
+          type: string
+        limt_age:
+          type: string
+        poster_url:
+          type: string
+        release_date:
+          type: string
+          format: date
+        cast:
+          type: string
+        crew:
+          type: string
+        vid_url:
+          type: string
+      required:
+        - title
+        - description
+        - duration 
+        - genre 
+        - rating
+        - limit_age 
+        - poster_url 
+        - release_date
+        - cast
+        - crew
+        - vid_url
+
+    MovieRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        duration:
+          type: string
+        genre:
+          type: string
+        rating:
+          type: string
+        limt_age:
+          type: string
+        poster_url:
+          type: string
+        release_date:
+          type: string
+          format: date
+        cast:
+          type: string
+        crew:
+          type: string
+        vid_url:
+          type: string
+      required:
+        - title
+        - description
+        - duration 
+        - genre 
+        - rating
+        - limit_age 
+        - poster_url 
+        - release_date
+        - cast
+        - crew
+        - vid_url
+
+    Showtime:
+      type: object
+      properties:
+        id:
+          type: string
+        movie_id:
+          type: string
+        theater_id:
+          type: string
+        time:
+          type: string
+          format: date-time
+      required:
+        - id
+        - movie_id
+        - theater_id
+        - time
+
+    ShowtimeRequest:
+      type: object
+      properties:
+        roomName:
+          type: string
+        date:
+          type: string
+          format: date-time
+        language:
+          type: string
+      required:
+        - roomName
+        - date
+        - language
+        
+    Promotion:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        discount:
+          type: number
+
+    Seat:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum: [available, booked, selected]
+
+    Theater:
+      type: object
+      properties:
+        name:
+          type: string
+        location:
+          type: string
+        brandName:
+          type: string
+        img:
+          type: string
+    
+    TicketRequest:
+      type: object
+      properties:
+        accountId:
+          type: string
+        showtime_id:
+          type: string
+        seat_id:
+          type: string
+      required:
+        - accountId
+        - showtime_id
+        - seat_id
+
+    TicketResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+ 
+
