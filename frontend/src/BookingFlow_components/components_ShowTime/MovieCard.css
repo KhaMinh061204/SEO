@@ -1,93 +1,274 @@
 /* MovieCard.css */
 .movie-card {
-    width: 89%;
-    background-color: rgba(217, 217, 217, 0.35); /* Nền tím đậm */
-    border-radius: 10px;
-    padding: 20px;
-    color: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    font-family: 'Arial', sans-serif;
-    position: relative;
+  width: 89%;
+  background-color: rgba(217, 217, 217, 0.35);
+  border-radius: 10px;
+  padding: 20px;
+  color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  font-family: 'Arial', sans-serif;
+  position: relative;
+  margin-top: 100px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
 
-    margin-top: 100px;
-    margin-bottom: 10px;
+.logo img {
+  width: 100px;
+  margin-bottom: 10px;
+}
+
+.movie-content {
+  display: flex;
+  align-items: flex-start;
+}
+
+.movie-poster {
+  flex-shrink: 0;
+  position: relative;
+}
+
+.movie-poster img {
+  width: 120px;
+  height: auto;
+  border-radius: 8px;
+  margin-right: 20px;
+  border: 5px solid rgba(0, 0, 0, 0.4);
+  object-fit: cover;
+  aspect-ratio: 2/3;
+}
+
+.movie-details {
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.movie-details h2 {
+  text-align: left;
+  font-size: 1.5rem;
+  margin-top: 0;
+  margin-bottom: 10px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.movie-duration {
+  margin: 15px 0;
+  font-size: 0.9rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.movie-date {
+  margin-left: 5px;
+  font-size: 0.9rem;
+}
+
+.movie-info {
+  overflow: hidden;
+}
+
+.movie-info p {
+  margin: 15px 5px;
+  font-size: 0.9rem;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.movie-info strong {
+  color: white;
+}
+
+.movie-badge {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
+}
+
+.movie-badge span {
+  display: inline-block;
+  background-color: #4a0072;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.movie-timeline {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.timeline-point {
+  width: 12px;
+  height: 12px;
+  background-color: #555;
+  border-radius: 50%;
+}
+
+.timeline-point.active {
+  background-color: #ff0000;
+}
+
+.movie-card-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  color: white;
+  background-color: rgba(217, 217, 217, 0.2);
+  border-radius: 10px;
+}
+
+@media screen and (max-width: 992px) {
+  .movie-card {
+    width: 94%;
+    padding: 18px;
+    margin-top: 80px;
   }
-  
-  .logo img {
+
+  .movie-poster img {
+    width: 110px;
+    border-width: 4px;
+  }
+
+  .movie-details h2 {
+    font-size: 1.3rem;
+  }
+
+  .movie-info p {
+    margin: 12px 5px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .movie-card {
+    width: 96%;
+    padding: 15px;
+    margin-top: 60px;
+  }
+
+  .movie-poster img {
     width: 100px;
-    margin-bottom: 10px;
+    border-width: 3px;
+    margin-right: 15px;
   }
-  
+
+  .movie-details h2 {
+    font-size: 1.2rem;
+  }
+
+  .movie-duration,
+  .movie-date {
+    font-size: 0.85rem;
+  }
+
+  .movie-info p {
+    margin: 10px 5px;
+    font-size: 0.85rem;
+  }
+
+  .movie-badge {
+    top: 15px;
+    right: 15px;
+  }
+
+  .movie-badge span {
+    padding: 4px 8px;
+    font-size: 0.8rem;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .movie-card {
+    width: 98%;
+    padding: 12px;
+    margin-top: 50px;
+  }
+
   .movie-content {
-    display: flex;
-    align-items: flex-start;
+    flex-direction: column;
+    align-items: center;
   }
-  
+
+  .movie-poster {
+    margin-bottom: 15px;
+  }
+
   .movie-poster img {
     width: 120px;
-    height: auto;
-    border-radius: 8px;
-    margin-right: 20px;
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
 
-    
-    border: 5px solid rgba(0, 0, 0, 0.4);
-    
+  .movie-details {
+    width: 100%;
+    text-align: center;
   }
-  
+
   .movie-details h2 {
-    text-align: left;
-    font-size: 1.5rem;
+    text-align: center;
   }
-  
-  .movie-duration{
-    margin: 15px 0;
-    font-size: 0.9rem;
+
+  .movie-duration {
+    justify-content: center;
   }
-  .movie-date{
-    margin: 15px 0px;
-    margin-left: 30px;
-    font-size: 0.9rem;
-  }
-  
+
   .movie-info p {
-    margin: 15px 5px;
-    font-size: 0.9rem;
+    text-align: center;
   }
-  
-  .movie-info strong {
-    color: white;
-  }
-  
+
   .movie-badge {
-    position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 12px;
+    right: 12px;
   }
-  
-  .movie-badge span {
-    display: inline-block;
-    background-color: #4a0072; /* Nền badge */
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 0.9rem;
-    font-weight: bold;
+}
+
+@media screen and (max-width: 360px) {
+  .movie-card {
+    padding: 10px;
+    margin-top: 40px;
   }
-  
-  .movie-timeline {
-    display: flex;
-    justify-content: space-around;
+
+  .movie-poster img {
+    width: 100px;
+  }
+
+  .movie-details h2 {
+    font-size: 1.1rem;
+  }
+
+  .movie-duration,
+  .movie-date {
+    font-size: 0.8rem;
+  }
+
+  .movie-info p {
+    font-size: 0.8rem;
+    margin: 8px 3px;
+  }
+}
+
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .movie-card {
     margin-top: 20px;
+    padding: 10px 15px;
   }
-  
-  .timeline-point {
-    width: 12px;
-    height: 12px;
-    background-color: #555;
-    border-radius: 50%;
+
+  .movie-content {
+    flex-direction: row;
   }
-  
-  .timeline-point.active {
-    background-color: #ff0000; /* Điểm active màu đỏ */
+
+  .movie-poster img {
+    width: 80px;
   }
-  
+}
