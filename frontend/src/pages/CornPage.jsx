@@ -4,6 +4,7 @@ import Corn from "../BookingFlow_components/component_Corn/Corn"
 import { useContext,useEffect } from "react";
 import { BookingContext } from "../BookingFlow_components/Context";
 import { useNavigate } from "react-router-dom";
+//hahaa
 function CornPage() {
   const { movie_id, selectedDate,selectedTime, selectedTheater,selectedRoomId,selectedSeats } = useContext(BookingContext);
   const navigate = useNavigate();
