@@ -1,61 +1,80 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./TimeBar.css";
 
-const days = [
-  { day: "Thứ 2", date: "2024-12-13" },
-  { day: "Thứ 3", date: "2024-12-14" },
-  { day: "Thứ 4", date: "2024-12-15" },
-  { day: "Thứ 5", date: "2024-12-16" },
-  { day: "Thứ 6", date: "2024-12-17" },
-  { day: "Thứ 7", date: "2024-12-18" },
-  { day: "Chủ Nhật", date: "2024-12-19" },
-];
+// Generate actual dates dynamically instead of hardcoded ones
+const getDaysArray = () => {
+  const days = [];
+  const dayNames = ["Chủ Nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"];
+  
+  const today = new Date();
+  
+  for (let i = 0; i < 14; i++) { // Show next 14 days
+    const date = new Date();
+    date.setDate(today.getDate() + i);
+    
+    days.push({
+      day: dayNames[date.getDay()],
+      date: date.toISOString().split('T')[0]
+    });
+  }
+  
+  return days;
+};
 
 const TimeBar = ({ onDateSelect }) => {
-  const [selectedDay, setSelectedDay] = useState(null);
+  const days = useRef(getDaysArray()).current;
+  const [selectedDay, setSelectedDay] = useState(0); // Default to today
+  const scrollRef = useRef(null);
 
   useEffect(() => {
-    if (onDateSelect && selectedDay === null) {
-      // Truyền ngày mặc định cho onDateSelect nếu không có ngày nào được chọn
+    // Select today as default
+    if (onDateSelect && selectedDay === 0) {
       onDateSelect(days[0]);
-      setSelectedDay(0);  // Chọn mặc định là Thứ 2 khi không có ngày nào được chọn
     }
-  }, [onDateSelect, selectedDay]);
+  }, [onDateSelect, selectedDay, days]);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    // Trả về chỉ ngày/tháng (dùng toLocaleDateString để định dạng)
     return date
-    .toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit" })
-    .replace(/-/g, "/"); // Thay đổi mọi dấu '-' thành '/'
+      .toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit" })
+      .replace(/-/g, "/");
   };
   
   const handleDayClick = (index) => {
-    console.log('index: ',index);
     setSelectedDay(index);
     if (onDateSelect) {
-      // Truyền cả day và date trong selectedDayData
       const selectedDayData = {
         day: days[index].day,
         date: days[index].date
       };
-      onDateSelect(selectedDayData); // Gọi hàm onDateSelect để cập nhật ngày và thứ
+      onDateSelect(selectedDayData);
     }
   };
 
+  const isToday = (dateString) => {
+    const today = new Date();
+    const date = new Date(dateString);
+    return today.toDateString() === date.toDateString();
+  };
+
   return (
-    <div className="booking-bar">
+    <div className="booking-bar" ref={scrollRef}>
       {days.map((day, index) => (
         <div
           key={index}
           className={`day-item ${selectedDay === index ? "active" : ""}`}
           onClick={() => handleDayClick(index)}
+          aria-label={`Select ${day.day}, ${formatDate(day.date)}`}
+          role="button"
+          tabIndex={0}
         > 
-          <p className="day-label">{day.day}</p>
+          <p className="day-label">
+            {day.day}
+            {isToday(day.date) ? " (Hôm nay)" : ""}
+          </p>
           <p className="date-label">{formatDate(day.date)}</p>
         </div>
       ))}
-    
     </div>
   );
 };

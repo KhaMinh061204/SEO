@@ -6,7 +6,7 @@ import OrderPreview from "../components/order_preview";
 function contentOrderPage(){
 
 
-    return(        
+    return(
         <>
             <OrderPreview/>
         </>

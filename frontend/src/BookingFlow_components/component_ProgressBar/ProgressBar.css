@@ -41,4 +41,197 @@
   .label.active-text {
     color: white;
   }
+
+.progress-bar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto 30px;
+}
+
+.progress-segments {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  margin-bottom: 15px;
+}
+
+/* Line connecting the dots */
+.progress-line {
+  position: absolute;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.25);
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.progress-line-fill {
+  position: absolute;
+  height: 4px;
+  background-color: #bc1e47;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  z-index: 2;
+  transition: width 0.5s ease;
+}
+
+/* Step dots */
+.progress-step {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  color: #fff;
+  font-weight: bold;
+  position: relative;
+  z-index: 3;
+  transition: all 0.3s ease;
+}
+
+.progress-step.active {
+  background-color: #bc1e47;
+  box-shadow: 0 0 0 3px rgba(188, 30, 71, 0.3);
+}
+
+.progress-step.completed {
+  background-color: #bc1e47;
+}
+
+/* Step labels */
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 12px;
+  box-sizing: border-box;
+}
+
+.step-label {
+  text-align: center;
+  color: #d1d1d1;
+  font-size: 14px;
+  font-weight: 500;
+  flex: 1;
+  max-width: 110px;
+  transition: color 0.3s ease;
+}
+
+.step-label.active {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Checkmark icon for completed steps */
+.checkmark {
+  font-size: 14px;
+  color: #fff;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 992px) {
+  .progress-bar-container {
+    max-width: 700px;
+    margin-bottom: 25px;
+  }
   
+  .progress-step {
+    width: 22px;
+    height: 22px;
+    font-size: 13px;
+  }
+  
+  .step-label {
+    font-size: 13px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .progress-bar-container {
+    max-width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  .progress-step {
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+  }
+  
+  .progress-line, .progress-line-fill {
+    height: 3px;
+  }
+  
+  .step-label {
+    font-size: 12px;
+    max-width: 90px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .progress-bar-container {
+    margin-bottom: 15px;
+  }
+  
+  .progress-segments {
+    margin-bottom: 10px;
+  }
+  
+  .progress-step {
+    width: 18px;
+    height: 18px;
+    font-size: 11px;
+  }
+  
+  .progress-line, .progress-line-fill {
+    height: 2px;
+  }
+  
+  .step-label {
+    font-size: 10px;
+    text-align: center;
+    max-width: 80px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .progress-step {
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+  }
+  
+  .step-label {
+    font-size: 9px;
+    max-width: 70px;
+  }
+  
+  .checkmark {
+    font-size: 10px;
+  }
+}
+
+/* Landscape orientation */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .progress-bar-container {
+    margin-bottom: 10px;
+  }
+  
+  .progress-segments {
+    margin-bottom: 8px;
+  }
+}

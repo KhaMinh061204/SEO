@@ -4,9 +4,9 @@ import Showtime from '../BookingFlow_components/components_ShowTime/Showtime'
 function ShowtimePage() {
   return (
     <>
-    <Navbar></Navbar>
+    {/* <Navbar></Navbar> */}
     <Showtime></Showtime>
-    <Footer></Footer>
+    {/* <Footer></Footer> */}
     </>
   )
 }

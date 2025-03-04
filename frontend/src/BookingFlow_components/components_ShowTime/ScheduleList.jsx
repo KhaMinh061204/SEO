@@ -1,35 +1,50 @@
-import React, { useState, useEffect, useContext  } from "react";
-import "./ScheduleList.css"; // Import file CSS
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getShowtimeAndTheaterInfo } from "../../api/api.js";
-import { BookingContext } from "../Context"
+import { BookingContext } from "../Context";
+import "./ScheduleList.css";
 
-const ScheduleList = ({selectedDate, onScheduleSelect }) => {
+const ScheduleList = ({ selectedDate, onScheduleSelect }) => {
   const [schedules, setSchedules] = useState([]);
   const [openCinema, setOpenCinema] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { movieId } = useParams(); 
   const [selectedTime, setSelectedTime] = useState(null);
-  const { movie_id, setMovie_id,setSelectedSeats,setSelectedSeatIds } = useContext(BookingContext);
+  const [selectedCinema, setSelectedCinema] = useState(null);
+  const { movieId } = useParams();
+  const { movie_id, setMovie_id } = useContext(BookingContext);
+
+  // Reset selected time when date changes
+  useEffect(() => {
+    setSelectedTime(null);
+  }, [selectedDate]);
   
   useEffect(() => {
     const fetchSchedules = async () => {
-      setIsLoading(true); // Bắt đầu trạng thái tải dữ liệu
+      if (!movieId || !selectedDate || !selectedDate.date) {
+        setIsLoading(false);
+        return;
+      }
+
+      setIsLoading(true);
       setMovie_id(movieId);
+      
       try {
         const data = await getShowtimeAndTheaterInfo(movieId, selectedDate.date);
         setSchedules(data);
+
+        // If we have results, open the first cinema by default
+        if (data && data.length > 0) {
+          setOpenCinema(data[0].screening_room_id.theater_id.name);
+        }
       } catch (err) {
         console.error("Error fetching schedules:", err);
       } finally {
-        setIsLoading(false); // Kết thúc trạng thái tải dữ liệu
+        setIsLoading(false);
       }
     };
 
-    if (movieId && selectedDate.date) {
-      fetchSchedules();
-    }
-  }, [movieId, selectedDate.date]);
+    fetchSchedules();
+  }, [movieId, selectedDate, setMovie_id]);
 
   const toggleCinema = (cinema) => {
     setOpenCinema(openCinema === cinema ? null : cinema);
@@ -39,47 +54,86 @@ const ScheduleList = ({selectedDate, onScheduleSelect }) => {
     const date = new Date(dateString);
     const hours = date.getUTCHours().toString().padStart(2, '0');
     const minutes = date.getUTCMinutes().toString().padStart(2, '0');
-    return `${hours}:${minutes}`; // Trả về thời gian dưới dạng HH:mm
+    return `${hours}:${minutes}`;
   };
-    return (
-    <div className="schedule-list-container">
-      {schedules.map((schedule, index) => (
-        <div key={index} className="schedule-item">
-          {/* Header */}
-          <button
-            onClick={() => toggleCinema(schedule.screening_room_id.theater_id.name)}
-            className={`schedule-header ${
-              openCinema === schedule.screening_room_id.theater_id.name ? "active" : ""
-            }`}
-          >
-            {schedule.screening_room_id.theater_id.name}
-          </button>
 
-          {/* Body */}
-          {openCinema === schedule.screening_room_id.theater_id.name && (
-            <div className="schedule-body">
-              <p className="schedule-address">{schedule.screening_room_id.theater_id.location}</p>
-              <div className="schedule-times">
-              {[...schedule.dates]
-                  .sort((a, b) => new Date(a) - new Date(b))
-                  .map((date, dateIndex) => {
-                    const formattedTime = formatTime(date.date);
-                    const isSelected = selectedTime === formattedTime;
-                    return (
-                      <button key={dateIndex} className={`schedule-time-button ${isSelected ? "active" : ""}`}  
-                        onClick={() => {
-                          onScheduleSelect(schedule.screening_room_id.theater_id.name, formatTime(date.date),schedule.screening_room_id._id,date.showtimeId)
-                          setSelectedTime(formattedTime); // Cập nhật thời gian đc chọn 
-                        }}>
-                          {formatTime(date.date)}
-                      </button>
-                    )
-                  })}
-              </div>
-            </div>
-          )}
+  const handleTimeSelection = (cinema, formattedTime, roomId, showtimeId) => {
+    setSelectedTime(formattedTime);
+    setSelectedCinema(cinema);
+    onScheduleSelect(cinema, formattedTime, roomId, showtimeId);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="schedule-list-container">
+        <div className="schedule-list-loading">
+          <p>Đang tải lịch chiếu...</p>
         </div>
-      ))}
+      </div>
+    );
+  }
+
+  if (!schedules || schedules.length === 0) {
+    return (
+      <div className="schedule-list-container">
+        <div className="no-schedules">
+          <p>Không có lịch chiếu cho ngày {selectedDate?.date ? new Date(selectedDate.date).toLocaleDateString() : 'đã chọn'}</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="schedule-list-container">
+      {schedules.map((schedule, index) => {
+        const theaterName = schedule.screening_room_id.theater_id.name;
+        const isOpen = openCinema === theaterName;
+        
+        return (
+          <div key={index} className="schedule-item">
+            {/* Header with toggle icon */}
+            <button
+              onClick={() => toggleCinema(theaterName)}
+              className={`schedule-header ${isOpen ? "active" : ""}`}
+              aria-expanded={isOpen}
+            >
+              <span className="schedule-header-text">{theaterName}</span>
+              <span className="schedule-header-icon">▼</span>
+            </button>
+
+            {/* Body */}
+            {isOpen && (
+              <div className="schedule-body">
+                <p className="schedule-address">{schedule.screening_room_id.theater_id.location}</p>
+                <div className="schedule-times">
+                  {[...schedule.dates]
+                    .sort((a, b) => new Date(a.date) - new Date(b.date))
+                    .map((dateItem, dateIndex) => {
+                      const formattedTime = formatTime(dateItem.date);
+                      const isTimeSelected = selectedTime === formattedTime && selectedCinema === theaterName;
+                      
+                      return (
+                        <button 
+                          key={dateIndex} 
+                          className={`schedule-time-button ${isTimeSelected ? "active" : ""}`}
+                          onClick={() => handleTimeSelection(
+                            theaterName, 
+                            formattedTime, 
+                            schedule.screening_room_id._id, 
+                            dateItem.showtimeId
+                          )}
+                          aria-pressed={isTimeSelected}
+                        >
+                          {formattedTime}
+                        </button>
+                      );
+                    })}
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 };

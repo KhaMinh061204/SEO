@@ -1,21 +1,38 @@
-import React, { useContext } from 'react';
-import MovieCard from './MoviesCard';
-import ScheduleList from './ScheduleList';
-import TimeBar from './TimeBar';
-import Confirm from './Confirm';
-import CinemaSelector from './CinemaSelector';
+import React, { useContext, useEffect, useState } from 'react';
 import ProgressBar from '../component_ProgressBar/ProgressBar';
 import { BookingContext } from '../Context';
+import CinemaSelector from './CinemaSelector';
+import Confirm from './Confirm';
+import MovieCard from './MoviesCard';
+import ScheduleList from './ScheduleList';
+import './Showtime.css';
+import TimeBar from './TimeBar';
 
 function Showtime() {
   const { selectedDate, setSelectedDate,
     selectedTheater, setSelectedTheater,
     selectedTime, setSelectedTime,
     selectedRoomId, setSelectedRoomId,
-    selectedShowtimeId, setSelectedShowtimeId  } = useContext(BookingContext);
+    selectedShowtimeId, setSelectedShowtimeId } = useContext(BookingContext);
+  
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if device is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
 
   // Hàm nhận dữ liệu từ component con
-  const handleScheduleSelection = (theater, time, roomId,showtimeId) => {
+  const handleScheduleSelection = (theater, time, roomId, showtimeId) => {
     setSelectedTheater(theater);
     setSelectedTime(time);
     setSelectedRoomId(roomId);
@@ -23,45 +40,47 @@ function Showtime() {
     console.log("Theater selected:", theater);
     console.log("Time selected:", time);
     console.log("Room ID selected:", roomId);
-    console.log("Showtime selected:",showtimeId);
-
+    console.log("Showtime selected:", showtimeId);
   };
 
   const handleDateSelect = (selectedDayData) => {
     console.log("Thứ đã chọn:", selectedDayData.day);
     console.log("Ngày đã chọn:", selectedDayData.date);
     setSelectedDate(selectedDayData);
-
-    console.log('Updated:', selectedDate) // Cập nhật thông tin ngày đã chọn vào state
+    console.log('Updated:', selectedDate); // Cập nhật thông tin ngày đã chọn vào state
   };
 
   return (
-    <>
-    <div style={{marginBottom:'100px'}}> {/* Style cả trang showtime*/}
-
-    <div style={{display: 'flex',  justifyContent: 'center', alignItems: 'center', flexDirection:'column'}}>
-      <MovieCard></MovieCard>
-      <ProgressBar Progress={0}></ProgressBar>
-    </div>
-
-    <div style={{display: 'flex', flexDirection:'row'}}>
-      <div id='NhanhBentrai' style={{display: 'flex', flex: '3', flexDirection:'column', alignItems:'flex-start', justifyContent:'flex-start', 
-        padding:'10px',marginLeft:'20px', boxSizing:'border-box' }} >
-
-      <TimeBar onDateSelect={handleDateSelect} />
-      <ScheduleList selectedDate={selectedDate} onScheduleSelect={handleScheduleSelection} />
-
+    <div className="showtime-container">
+      <div className="movie-card-wrapper">
+        <MovieCard />
       </div>
-      <div id='NhanhBenPhai' style={{display: 'flex', flex:'2', flexDirection:'column', alignItems:'center' }}>
-        
-        <CinemaSelector ></CinemaSelector> 
-        <Confirm></Confirm>
+
+      {/* Progress Bar */}
+      <div className="progress-bar-wrapper">
+        <ProgressBar Progress={0} />
       </div>
-      
+
+      {isMobile && (
+        <div className="mobile-filter-wrapper">
+          <CinemaSelector />
+        </div>
+      )}
+
+      {/* Main Content Area */}
+      <div className="showtime-content">
+        <div className="showtime-left-column">
+          <TimeBar onDateSelect={handleDateSelect} />
+          <ScheduleList selectedDate={selectedDate} onScheduleSelect={handleScheduleSelection} />
+        </div>
+
+        <div className="showtime-right-column">
+          {/* On desktop: CinemaSelector appears here */}
+          {!isMobile && <CinemaSelector />}
+          <Confirm />
+        </div>
+      </div>
     </div>
-    
-    </div>
-    </>
   );
 }
 
