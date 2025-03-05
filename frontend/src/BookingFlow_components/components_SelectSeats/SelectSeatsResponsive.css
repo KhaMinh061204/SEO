@@ -1,6 +1,8 @@
 .select-seats-container {
   margin-bottom: 100px;
   width: 100%;
+  padding: 0 10px;
+  box-sizing: border-box;
 }
 
 .movie-progress-container {
@@ -10,6 +12,7 @@
   flex-direction: column;
   width: 100%;
   margin-bottom: 30px;
+  padding-top: 20px;
 }
 
 .booking-layout {
@@ -17,6 +20,8 @@
   flex-direction: row;
   flex-wrap: wrap;
   width: 100%;
+  gap: 20px;
+  justify-content: center;
 }
 
 .seats-container {
@@ -24,63 +29,137 @@
   flex: 3;
   min-width: 320px;
   align-items: flex-start;
-  justify-content: flex-start;
+  justify-content: center;
   padding: 10px;
-  margin-left: 50px;
+  box-sizing: border-box;
 }
 
 .confirmation-container {
   display: flex;
-  flex: 2;
+  flex: 3;
   min-width: 280px;
+  max-width: 400px;
   justify-content: center;
   align-items: flex-start;
   padding: 10px;
+  box-sizing: border-box;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
+.error-message {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 10px 15px;
+  border-radius: 4px;
+  margin: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.error-message p {
+  margin: 0;
+}
+
+.error-message button {
+  background-color: transparent;
+  border: 1px solid #c62828;
+  color: #c62828;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.error-message button:hover {
+  background-color: rgba(198, 40, 40, 0.1);
+}
+
+/* Tablet Responsive adjustments */
+@media (max-width: 992px) {
   .booking-layout {
-    flex-direction: column;
+    gap: 10px;
   }
   
   .seats-container {
-    margin-left: 0;
-    justify-content: center;
-    flex: 1;
+    min-width: 300px;
+    padding: 5px;
+  }
+  
+  .confirmation-container {
+    min-width: 250px;
+    padding: 5px;
+  }
+}
+
+/* Mobile Responsive adjustments */
+@media (max-width: 768px) {
+  .booking-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .seats-container {
     width: 100%;
+    max-width: 500px;
+    justify-content: center;
     order: 1;
+    margin-left: 0;
+    padding: 5px 0;
   }
   
   .confirmation-container {
     width: 100%;
-    flex: 1;
+    max-width: 500px;
     order: 2;
     margin-top: 20px;
-  }
-}
-
-@media (max-width: 480px) {
-  .seats-container {
-    padding: 5px;
-    margin-left: 10px;
-    margin-right: 10px;
+    padding: 5px 0;
   }
   
   .movie-progress-container {
-    padding: 0 10px;
+    margin-bottom: 20px;
+  }
+}
+
+/* Small Mobile adjustments */
+@media (max-width: 480px) {
+  .select-seats-container {
+    padding: 0 5px;
+  }
+  
+  .seats-container {
+    padding: 0;
+  }
+  
+  .movie-progress-container {
+    padding: 10px 5px;
     margin-bottom: 15px;
   }
   
   .confirmation-container {
-    padding: 5px 10px;
+    padding: 0;
+    margin-top: 15px;
+  }
+  
+  .error-message {
+    margin: 10px 5px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
   }
 }
 
-@media (max-width: 320px) {
-  .seats-container {
-    margin-left: 0;
-    margin-right: 0;
-    padding: 2px;
+/* Very Small screens */
+@media (max-width: 350px) {
+  .select-seats-container {
+    padding: 0 2px;
+  }
+  
+  .error-message {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  
+  .error-message button {
+    align-self: flex-end;
   }
 }

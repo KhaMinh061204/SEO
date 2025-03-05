@@ -1,39 +1,18 @@
-import React, { memo, useContext, useMemo } from "react";
-import { useNavigate } from "react-router";
+import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { BookingContext } from "../Context";
-import "./ConfirmSelectSeatResponsive.css";
-
-// Price calculation helper
-const calculateTotalPrice = (seats, pricePerSeat) => {
-  return (seats.length * pricePerSeat).toFixed(2);
-};
-
-// Memoized seat summary component for better performance
-const SeatSummary = memo(({ seats }) => (
-  <div className="seat-summary">
-    <p>Selected Seats: {seats.join(', ')}</p>
-    <p>Total Seats: {seats.length}</p>
-  </div>
-));
-
-// Memoized price info component
-const PriceInfo = memo(({ seats, seatPrice = 10 }) => (
-  <div className="price-info">
-    <p>Ticket Price: ${seatPrice.toFixed(2)} each</p>
-    <p>Total Price: ${calculateTotalPrice(seats, seatPrice)}</p>
-  </div>
-));
+import "./confirmselectseat.css";
 
 function ConfirmSelectSeat() {
-  const {
-    selectedSeats,
-    seatPrice = 10,
-    selectedTheater,
-    selectedTime,
-    selectedDate,
-    selectedSeatIds,
-    selectedShowtimeId,
-    movieTitle,
+  const { 
+    selectedTheater, 
+    selectedTime, 
+    selectedDate, 
+    convertDateFormat, 
+    movieTitle, 
+    movieUrl,
+    selectedSeats = [],
+    ticketPrice = 70000 // Default price in VND
   } = useContext(BookingContext);
   
   const navigate = useNavigate();
@@ -43,65 +22,73 @@ function ConfirmSelectSeat() {
   };
   
   const handleNext = () => {
-    if (selectedSeats.length > 0) {
-      navigate('/cornpage');
+    if(selectedSeats.length > 0) {
+      navigate("/payment"); // Navigate to payment page
     } else {
-      alert('Bạn chưa chọn ghế nào !!');
+      alert('Bạn chưa chọn ghế!');
     }
   };
   
-  // Memoize booking summary data
-  const bookingSummary = useMemo(() => {
-    return {
-      theater: selectedTheater,
-      date: selectedDate,
-      time: selectedTime,
-    };
-  }, [selectedTheater, selectedDate, selectedTime]);
+  const totalAmount = selectedSeats.length * ticketPrice;
+  
+  const formatCurrency = (amount) => {
+    return amount.toLocaleString('vi-VN') + ' đ';
+  };
 
   return (
-    <div className="confirm-seat-container">
-      <h2 className="confirm-title">Your Selection</h2>
-      
-      <div className="selected-seats-info">
-        {selectedSeats && selectedSeats.length > 0 ? (
-          <>
-            <SeatSummary seats={selectedSeats} />
-            <PriceInfo seats={selectedSeats} seatPrice={seatPrice} />
-            
-            {/* Additional booking info */}
-            <div className="booking-info">
-              {bookingSummary.theater && (
-                <p>Theater: {bookingSummary.theater}</p>
+    <div className="container">
+      <div className="container_card">
+        {/* Movie info card */}
+        <div className="card">
+          {/* Poster */}
+          <img
+            src={movieUrl}
+            alt={movieTitle}
+            className="poster"
+          />
+
+          {/* Thông tin */}
+          <div className="info">
+            <h3 className="title-confirm">{movieTitle}</h3>
+            <p className="subtitle">2D Phụ đề</p>
+            <div className="details">
+              {selectedTheater && <p>Rạp: {selectedTheater}</p>}
+              {selectedDate && selectedDate.day && (
+                <p>{selectedDate.day} - {convertDateFormat(selectedDate.date)}</p>
               )}
-              {bookingSummary.date && (
-                <p>Date: {bookingSummary.date}</p>
-              )}
-              {bookingSummary.time && (
-                <p>Time: {bookingSummary.time}</p>
-              )}
+              {selectedTime && <p>Giờ: {selectedTime}</p>}
             </div>
-            
-            <div className="action-buttons">
-              <button className="back-button" onClick={handleBack}>
-                Back
-              </button>
-              <button className="confirm-button" onClick={handleNext}>
-                Continue
-              </button>
-            </div>
-          </>
-        ) : (
-          <div className="empty-selection">
-            <p className="no-selection">Please select your seats</p>
-            <button className="back-button" onClick={handleBack}>
-              Back to Showtimes
-            </button>
           </div>
-        )}
+        </div>
+        
+        {/* Crossbar separator */}
+        <div className="crossbar"></div>
+        
+        {/* Seat information */}
+        <div className="infoseat">
+          <div className="seatdetail">
+            <p>Ghế: {selectedSeats.join(", ") || "Chưa chọn"}</p>
+            <p>Số lượng: {selectedSeats.length}</p>
+          </div>
+          <div className="seatprice">
+            {formatCurrency(ticketPrice * selectedSeats.length)}
+          </div>
+        </div>
+      </div>
+
+      {/* Total amount */}
+      <div className="total">
+        <div className="totaltext">Tổng tiền</div>
+        <div className="totalprice">{formatCurrency(totalAmount)}</div>
+      </div>
+
+      {/* Navigation buttons */}
+      <div className="buttons">
+        <button className="button-back" onClick={handleBack}>Quay lại</button>
+        <button className="button-next" onClick={handleNext}>Tiếp theo</button>
       </div>
     </div>
   );
 }
 
-export default React.memo(ConfirmSelectSeat);
+export default ConfirmSelectSeat;
