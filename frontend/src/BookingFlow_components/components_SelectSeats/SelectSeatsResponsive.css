@@ -1,0 +1,86 @@
+.select-seats-container {
+  margin-bottom: 100px;
+  width: 100%;
+}
+
+.movie-progress-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.booking-layout {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.seats-container {
+  display: flex;
+  flex: 3;
+  min-width: 320px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 10px;
+  margin-left: 50px;
+}
+
+.confirmation-container {
+  display: flex;
+  flex: 2;
+  min-width: 280px;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .booking-layout {
+    flex-direction: column;
+  }
+  
+  .seats-container {
+    margin-left: 0;
+    justify-content: center;
+    flex: 1;
+    width: 100%;
+    order: 1;
+  }
+  
+  .confirmation-container {
+    width: 100%;
+    flex: 1;
+    order: 2;
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .seats-container {
+    padding: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  
+  .movie-progress-container {
+    padding: 0 10px;
+    margin-bottom: 15px;
+  }
+  
+  .confirmation-container {
+    padding: 5px 10px;
+  }
+}
+
+@media (max-width: 320px) {
+  .seats-container {
+    margin-left: 0;
+    margin-right: 0;
+    padding: 2px;
+  }
+}

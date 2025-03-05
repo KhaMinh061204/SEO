@@ -1,97 +1,137 @@
-import React, { useState, useEffect } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import "./CinemaSeat.css"; // CSS tùy chỉnh
 import { getSeatsByRoom } from "../../api/api";
+import "./CinemaSeat.css";
+import "./CinemaSeatResponsive.css";
+
+// Individual seat component - memoized to prevent unnecessary re-renders
+const Seat = memo(({ seatKey, status, isHidden, onClick }) => {
+  return (
+    <div
+      className={`seat ${status} ${isHidden ? "hidden" : ""}`}
+      onClick={() => !isHidden && onClick(seatKey)}
+      aria-label={`Seat ${seatKey}`}
+      role="button"
+      tabIndex={isHidden ? -1 : 0}
+      aria-disabled={status === "booked" || isHidden}
+    >
+      {seatKey}
+    </div>
+  );
+});
 
 const CinemaSeat = ({ onSeatChange }) => {
-  const rows = ["A", "B", "C", "D", "E", "F", "G"];
-  const cols = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-  const hiddenSeats = ["A4", "A5", "A6"];  
-  const { roomId } = useParams(); 
+  // Define constants outside of renders for better performance
+  const rows = useMemo(() => ["A", "B", "C", "D", "E", "F", "G"], []);
+  const cols = useMemo(() => [1, 2, 3, 4, 5, 6, 7, 8, 9], []);
+  const hiddenSeats = useMemo(() => ["A4", "A5", "A6"], []);
+  
+  const { roomId } = useParams();
   const [seats, setSeats] = useState({});
-  const [seatIdMapping, setSeatIdMapping] = useState({}); // Mới
+  const [seatIdMapping, setSeatIdMapping] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchSeats = async () => {
-      const data = await getSeatsByRoom(roomId);
-     
-      if (data && data.seats) {
-        // Khởi tạo seatMapping và seatIdMapping
-        const seatMapping = {};
-        const seatIdMapping = {}; // Lưu seatId tương ứng
-
-        data.seats.forEach((seat) => {
-          const seatKey = `${seat.row}${seat.number}`;
-          seatMapping[seatKey] = seat.status;
-          seatIdMapping[seatKey] = seat._id; // Lưu seatId
-        });
-
-        setSeats(seatMapping); // Cập nhật state seatMapping
-        setSeatIdMapping(seatIdMapping); // Cập nhật state seatIdMapping
+      setLoading(true);
+      try {
+        const data = await getSeatsByRoom(roomId);
+        
+        if (data && data.seats) {
+          const seatMapping = {};
+          const seatIdMapping = {};
+          
+          data.seats.forEach((seat) => {
+            const seatKey = `${seat.row}${seat.number}`;
+            seatMapping[seatKey] = seat.status;
+            seatIdMapping[seatKey] = seat._id;
+          });
+          
+          setSeats(seatMapping);
+          setSeatIdMapping(seatIdMapping);
+        }
+      } catch (error) {
+        console.error("Error fetching seats:", error);
+      } finally {
+        setLoading(false);
       }
     };
-
+    
     fetchSeats();
   }, [roomId]);
-
-  const handleSeatClick = (row, col) => {
-    const seatKey = `${row}${col}`;
+  
+  // Memoize seat click handler for better performance
+  const handleSeatClick = useCallback((seatKey) => {
     setSeats((prevSeats) => {
-      if (prevSeats[seatKey] === "booked") return prevSeats; // Không cho chọn ghế đã đặt
+      if (prevSeats[seatKey] === "booked") return prevSeats;
       return {
         ...prevSeats,
         [seatKey]: prevSeats[seatKey] === "selected" ? "available" : "selected",
       };
     });
-  };
-
+  }, []);
+  
+  // Use effect for seat selection updates
   useEffect(() => {
-    // Gửi danh sách ghế đã chọn và seatId về component cha
     const selectedSeats = Object.keys(seats).filter(
       (key) => seats[key] === "selected"
     );
-    const selectedSeatIds = selectedSeats.map(seatKey => seatIdMapping[seatKey]); // Lấy ID từ seatIdMapping
+    const selectedSeatIds = selectedSeats.map(seatKey => seatIdMapping[seatKey]);
     onSeatChange(selectedSeats, selectedSeatIds);
   }, [seats, seatIdMapping, onSeatChange]);
+  
+  // Build seat grid once for better performance
+  const seatGrid = useMemo(() => {
+    return rows.map((row) => (
+      <div className="row" key={row} role="row">
+        {cols.map((col) => {
+          const seatKey = `${row}${col}`;
+          const isHidden = hiddenSeats.includes(seatKey);
+          const seatStatus = seats[seatKey] || "available";
+          return (
+            <Seat
+              key={seatKey}
+              seatKey={seatKey}
+              status={seatStatus}
+              isHidden={isHidden}
+              onClick={handleSeatClick}
+            />
+          );
+        })}
+      </div>
+    ));
+  }, [rows, cols, seats, hiddenSeats, handleSeatClick]);
+  
+  // Legend items for better reusability
+  const legendItems = [
+    { status: "available", text: "Ghế chưa đặt" },
+    { status: "selected", text: "Ghế đang đặt" },
+    { status: "occupied", text: "Ghế đã đặt" }
+  ];
+
+  if (loading) {
+    return <div className="seats-loading">Loading seats...</div>;
+  }
 
   return (
-    <div className="cinema">
+    <div className="cinema-seat-container" aria-label="Cinema seat selection">
       <div className="screen-container">
-        <div className="screen-curve"></div>
-        <p className="screen-text">MÀN HÌNH</p>
+        <div className="screen-curve" aria-hidden="true"></div>
       </div>
-      <div className="seating">
-        {rows.map((row) => (
-          <div className="row" key={row}>
-            {cols.map((col) => {
-              const seatKey = `${row}${col}`;
-              const isHidden = hiddenSeats.includes(seatKey); // Kiểm tra ghế có cần ẩn không
-              const seatStatus = seats[seatKey] || "available";
-              return (
-                <div
-                  key={seatKey}
-                  className={`seat ${seatStatus} ${isHidden ? "hidden" : ""}`}
-                  onClick={() => handleSeatClick(row, col)}
-                >
-                  {seatKey}
-                </div>
-              );
-            })}
+      <p className="screen-text">MÀN HÌNH</p>
+      
+      <div className="seats-map" role="grid" aria-label="Seat selection grid">
+        {seatGrid}
+      </div>
+      
+      <div className="seat-legend" aria-label="Seat type legend">
+        {legendItems.map((item) => (
+          <div className="legend-item" key={item.status}>
+            <span className={`seat-${item.status}`} aria-hidden="true"></span> 
+            {item.text}
           </div>
         ))}
       </div>
-        <div className="legend">
-            <div className="legend-item">
-            <span className="seat available"></span> Ghế chưa đặt
-            </div>
-            <div className="legend-item">
-            <span className="seat selected"></span> Ghế đang đặt
-            </div>
-            <div className="legend-item">
-            <span className="seat booked"></span> Ghế đã đặt
-            </div>
-        </div>
     </div>
   );
 };

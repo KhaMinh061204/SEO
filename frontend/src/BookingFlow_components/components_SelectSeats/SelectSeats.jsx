@@ -1,37 +1,36 @@
-import MovieCard from "../components_ShowTime/MoviesCard"
+import { useCallback, useContext } from "react"
 import ProgressBar from "../component_ProgressBar/ProgressBar"
-import ConfirmSelectSeat from "./ConfirmSelectSeat"
-import CinemaSeat from "./CinemaSeat"
-import { useContext,useCallback } from "react"
+import MovieCard from "../components_ShowTime/MoviesCard"
 import { BookingContext } from "../Context"
+import CinemaSeat from "./CinemaSeat"
+import ConfirmSelectSeat from "./ConfirmSelectSeat"
+import './SelectSeatsResponsive.css'
 
 function SelectSeats() {
-  const { setSelectedSeats,setSelectedSeatIds } = useContext(BookingContext);
+  const { setSelectedSeats, setSelectedSeatIds } = useContext(BookingContext);
   
-  const handleSelectSeat = useCallback((seats,seatId) => {
+  const handleSelectSeat = useCallback((seats, seatId) => {
     setSelectedSeats(seats); 
     setSelectedSeatIds(seatId)
     console.log(seatId)
-  }, [setSelectedSeats],[setSelectedSeatIds]);
+  }, [setSelectedSeats, setSelectedSeatIds]);
 
   return (
     <>
-    <div style={{marginBottom:'100px'}}> 
-      <div style={{display: 'flex',  justifyContent: 'center', alignItems: 'center', flexDirection:'column'}}>
-        <MovieCard></MovieCard>
-        <ProgressBar Progress={1}></ProgressBar>
+    <div className="select-seats-container"> 
+      <div className="movie-progress-container">
+        <MovieCard />
+        <ProgressBar Progress={1} />
       </div>
 
-      <div style={{display: 'flex', flexDirection:'row'}}>
-        <div id='NhanhBentrai' style={{display: 'flex', flex: '3', alignItems:'flex-start', justifyContent:'flex-start', 
-        padding:'10px',marginLeft:'50px' }} >
+      <div className="booking-layout">
+        <div className="seats-container">
           <CinemaSeat onSeatChange={handleSelectSeat}/>
         </div>
-        <div id='NhanhBenPhai' style={{display: 'flex', flex:'2', justifyContent:'center', alignItems:'center' }}>
+        <div className="confirmation-container">
           <ConfirmSelectSeat />
         </div>
       </div>
-
     </div>
     </>
   )

@@ -1,0 +1,235 @@
+.cinema-seat-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 10px;
+  will-change: transform; /* Performance optimization */
+}
+
+.screen-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+  perspective: 500px; /* 3D effect for screen */
+}
+
+.screen {
+  background: linear-gradient(to bottom, #ccc, #eee);
+  width: 80%;
+  height: 40px;
+  border-radius: 50% 50% 0 0 / 10% 10% 0 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 10px 15px -5px rgba(0, 0, 0, 0.3);
+  color: #333;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+.screen-curve {
+  background: linear-gradient(to bottom, #ccc, #eee);
+  width: 80%;
+  height: 40px;
+  border-radius: 50% 50% 0 0 / 10% 10% 0 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 10px 15px -5px rgba(0, 0, 0, 0.3);
+  transform: rotateX(-30deg); /* 3D effect */
+}
+
+.screen-text {
+  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: bold;
+  margin: 10px 0 20px;
+  color: #333;
+  text-align: center;
+}
+
+.seats-map {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: auto;
+  padding: 10px;
+  margin-bottom: 15px;
+  scrollbar-width: thin;
+}
+
+/* Add custom scrollbar */
+.seats-map::-webkit-scrollbar {
+  height: 6px;
+}
+
+.seats-map::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.seats-map::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.seat-row {
+  display: flex;
+  margin-bottom: 10px;
+  align-items: center;
+}
+
+.seat {
+  width: 30px;
+  height: 30px;
+  margin: 3px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 500;
+  user-select: none; /* Prevent text selection */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Add hover effect */
+.seat:not(.booked):not(.hidden):hover {
+  transform: scale(1.1);
+}
+
+.seat:focus {
+  outline: 2px solid #0066cc;
+}
+
+.seat.hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.seat-available {
+  background-color: #ccc;
+  color: #333;
+}
+
+.seat-selected {
+  background-color: #64a5f5;
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+}
+
+.seat-occupied {
+  background-color: #888;
+  color: #ddd;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.seat-legend {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  gap: 15px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+}
+
+.legend-item span:first-child {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  margin-right: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Loading state */
+.seats-loading {
+  text-align: center;
+  padding: 30px;
+  font-size: 16px;
+  color: #555;
+}
+
+@media (max-width: 600px) {
+  .screen {
+    height: 30px;
+  }
+  
+  .screen-curve {
+    width: 90%;
+    height: 30px;
+  }
+  
+  .screen-text {
+    font-size: 12px;
+    margin-bottom: 15px;
+  }
+  
+  .seat {
+    width: 25px;
+    height: 25px;
+    margin: 2px;
+    font-size: 10px;
+  }
+  
+  .legend-item {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 400px) {
+  .seat {
+    width: 20px;
+    height: 20px;
+    margin: 2px;
+    font-size: 9px;
+  }
+  
+  .seat-legend {
+    gap: 10px;
+  }
+  
+  .legend-item {
+    margin: 3px;
+    font-size: 11px;
+  }
+  
+  .screen-text {
+    font-size: 11px;
+    margin-bottom: 10px;
+  }
+  
+  .screen-curve {
+    height: 25px;
+  }
+}
+
+@media (max-width: 320px) {
+  .seat {
+    width: 18px;
+    height: 18px;
+    margin: 1px;
+    font-size: 8px;
+  }
+  
+  .seat-legend {
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .legend-item {
+    margin-bottom: 3px;
+    font-size: 10px;
+  }
+}

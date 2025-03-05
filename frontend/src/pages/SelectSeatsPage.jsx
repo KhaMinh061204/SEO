@@ -15,9 +15,9 @@ function SelectSeatsPage() {
   }, [movie_id, selectedDate, selectedTime, selectedTheater, selectedRoomId, navigate]);
   return (
     <>
-    <Navbar/>
+    {/* <Navbar/> */}
     <SelectSeats/>
-    <Footer/>
+    {/* <Footer/> */}
     </>
   )
 }

@@ -6,7 +6,7 @@ import AuthContent from "../layouts/auth-content";
 function SearchPage() {
 
   return (
-    <>        
+    <>
     {/* header  */}
         <Navbar />
         <AuthContent/>
