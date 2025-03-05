@@ -18,7 +18,7 @@ function ConfirmCorn() {
     convertDateFormat,
     totalCorn,
     formatCurrency,
-    fandb, 
+    fandb,
     movieTitle,
     movieUrl
   } = useContext(BookingContext);

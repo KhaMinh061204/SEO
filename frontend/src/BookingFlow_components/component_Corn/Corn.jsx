@@ -1,24 +1,25 @@
-import React from 'react'
-import MovieCard from '../components_ShowTime/MoviesCard';
+import React from 'react';
 import ProgressBar from '../component_ProgressBar/ProgressBar';
-import Menu from './Menu';
+import MovieCard from '../components_ShowTime/MoviesCard';
 import ConfirmCorn from './ConfirmCorn';
+import Menu from './Menu';
+import './responsive-corn.css'; // Import the new responsive styles
+
 function Corn() {
   return (
     <>
-    <div style={{marginBottom:'100px'}}> 
-      <div style={{display: 'flex',  justifyContent: 'center', alignItems: 'center', flexDirection:'column'}}>
+    <div className="corn-container"> 
+      <div className="corn-header">
         <MovieCard></MovieCard>
         <ProgressBar Progress={2}></ProgressBar>
       </div>
 
-      <div style={{display: 'flex', flexDirection:'row'}}>
-        <div id='NhanhBentrai' style={{display: 'flex', flex: '3', alignItems:'flex-start', justifyContent:'flex-start', 
-        padding:'10px',marginLeft:'20px' }} >
+      <div className="corn-content">
+        <div className="corn-menu-section">
           <Menu/>
         </div>
         
-        <div id='NhanhBenPhai' style={{display: 'flex', flex:'2', justifyContent:'center' }}>
+        <div className="corn-confirm-section">
           <ConfirmCorn/>
         </div>
       </div>

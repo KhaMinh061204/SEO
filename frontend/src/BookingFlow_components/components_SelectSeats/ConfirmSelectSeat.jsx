@@ -23,7 +23,7 @@ function ConfirmSelectSeat() {
   
   const handleNext = () => {
     if(selectedSeats.length > 0) {
-      navigate("/payment"); // Navigate to payment page
+      navigate("/cornpage"); // Navigate to payment page
     } else {
       alert('Bạn chưa chọn ghế!');
     }

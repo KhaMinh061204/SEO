@@ -15,9 +15,9 @@ function CornPage() {
   }, [movie_id, selectedDate, selectedTime, selectedTheater, selectedRoomId, selectedSeats,navigate]);
   return (
     <>
-    <Navbar></Navbar>
+    {/* <Navbar></Navbar> */}
     <Corn></Corn>
-    <Footer></Footer>
+    {/* <Footer></Footer> */}
     </>
   )
 }
