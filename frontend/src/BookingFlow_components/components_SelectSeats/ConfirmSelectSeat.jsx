@@ -4,12 +4,12 @@ import { BookingContext } from "../Context";
 import "./confirmselectseat.css";
 
 function ConfirmSelectSeat() {
-  const { 
-    selectedTheater, 
-    selectedTime, 
-    selectedDate, 
-    convertDateFormat, 
-    movieTitle, 
+  const {
+    selectedTheater,
+    selectedTime,
+    selectedDate,
+    convertDateFormat,
+    movieTitle,
     movieUrl,
     selectedSeats = [],
     ticketPrice = 70000 // Default price in VND
