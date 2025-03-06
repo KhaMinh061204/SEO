@@ -60,11 +60,11 @@ function ConfirmCorn() {
       });
 
       console.log("Booking response:", bookingResponse);
-      alert("Tiếp tục thanh toán!");
+      // alert("Tiếp tục thanh toán!");
       navigate("/payment");
     } catch (error) {
       console.error("Error during booking process:", error);
-      alert("Có lỗi xảy ra khi đặt vé. Vui lòng thử lại.");
+      alert(error.response?.data?.message || error.message);
     } finally {
       setLoading(false);
     }
