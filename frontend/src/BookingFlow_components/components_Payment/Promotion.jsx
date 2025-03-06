@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
+import { checkCoupon } from '../../api/api'; // Import checkCoupon từ api.js
+import { BookingContext } from '../Context';
 import './Promotion.css';
 import VoucherCardList from './VoucherCardList';
-import { BookingContext } from '../Context';
-import { checkCoupon } from '../../api/api'; // Import checkCoupon từ api.js
 
 const Promotion = () => {
   const { discountInput, setDiscountInput } = useContext(BookingContext);
@@ -35,7 +35,11 @@ const Promotion = () => {
         <button className="apply-button" onClick={handleCouponApply}>Áp dụng</button>
       </div>
       {errorMessage && <p className="error-message">{errorMessage}</p>}
-      <VoucherCardList />
+      
+      <div className="voucher-section">
+        <h3>Voucher của bạn</h3>
+        <VoucherCardList />
+      </div>
     </div>
   );
 };

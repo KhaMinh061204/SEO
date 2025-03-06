@@ -1,9 +1,36 @@
-    h1 {
-    margin-bottom: 20px;
-  }
-  
+h1 {
+  margin-bottom: 20px;
+}
+
+.VoucherCardList {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  width: 100%;
+}
+
+/* Responsive grid adjustments */
+@media (max-width: 992px) {
   .VoucherCardList {
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .VoucherCardList {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .VoucherCardList {
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
   }
+}
+
+@media (max-width: 400px) {
+  .VoucherCardList {
+    grid-template-columns: 1fr;
+  }
+}
