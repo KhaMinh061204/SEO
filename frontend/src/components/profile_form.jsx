@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
+import { useMediaQuery } from 'react-responsive';
 import { get, put } from "../api/api";
 
 function ProfileForm() {
+    const isMobile = useMediaQuery({ maxWidth: 767 });
+    const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 1023 });
 
     const [profile, setProfile] = useState({
         name: "",
@@ -10,6 +13,27 @@ function ProfileForm() {
         email: "",
         gender: "",
     });
+
+    // Responsive styles
+    const styles = {
+        formSection: {
+            transform: `translateY(${isMobile ? "-50px" : "-100px"})`,
+            padding: isMobile ? "0 5%" : "0 7%"
+        },
+        formRow: {
+            flexDirection: isMobile ? "column" : "row",
+            gap: isMobile ? "20px" : "20px",
+            marginBottom: isMobile ? "15px" : "30px"
+        },
+        input: {
+            padding: isMobile ? "10px" : "2%",
+            border: "1px solid transparent",
+            borderRadius: "7px",
+        },
+        buttonContainer: {
+            marginTop: isMobile ? "30px" : "50px"
+        }
+    };
 
     // Fetch dữ liệu từ API khi component render
     useEffect(() => {
@@ -57,7 +81,6 @@ function ProfileForm() {
         }
     };
 
-
     // Hàm xử lý khi người dùng thay đổi thông tin
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -68,16 +91,12 @@ function ProfileForm() {
     };
 
     return (
-        <section style={{ transform: "translateY(-100px)", padding: "0 7%" }}>
-            <div className="flex cenhor cenver w-100 gap20 mb-30">
+        <section style={styles.formSection}>
+            <div className="flex cenhor cenver w-100" style={styles.formRow}>
                 <div className="flex f-col w-100 gap10">
                     <label style={{ color: "white" }}>Họ và tên</label>
                     <input
-                        style={{
-                            padding: "2%",
-                            border: "1px solid transparent",
-                            borderRadius: "7px",
-                        }}
+                        style={styles.input}
                         placeholder="Họ tên"
                         className="w-100"
                         name="name"
@@ -88,11 +107,7 @@ function ProfileForm() {
                 <div className="flex f-col w-100 gap10">
                     <label style={{ color: "white" }}>Ngày sinh</label>
                     <input
-                        style={{
-                            padding: "2%",
-                            border: "1px solid transparent",
-                            borderRadius: "7px",
-                        }}
+                        style={styles.input}
                         type="date"
                         className="w-100"
                         name="dateOfBirth"
@@ -102,15 +117,11 @@ function ProfileForm() {
                 </div>
             </div>
 
-            <div className="flex cenhor cenver w-100 gap20 mb-30">
+            <div className="flex cenhor cenver w-100" style={styles.formRow}>
                 <div className="flex f-col w-100 gap10">
                     <label style={{ color: "white" }}>Số điện thoại</label>
                     <input
-                        style={{
-                            padding: "2%",
-                            border: "1px solid transparent",
-                            borderRadius: "7px",
-                        }}
+                        style={styles.input}
                         placeholder="Số điện thoại"
                         className="w-100"
                         name="phone"
@@ -121,11 +132,7 @@ function ProfileForm() {
                 <div className="flex f-col w-100 gap10">
                     <label style={{ color: "white" }}>Email</label>
                     <input
-                        style={{
-                            padding: "2%",
-                            border: "1px solid transparent",
-                            borderRadius: "7px",
-                        }}
+                        style={styles.input}
                         placeholder="Email"
                         className="w-100"
                         name="email"
@@ -135,10 +142,10 @@ function ProfileForm() {
                 </div>
             </div>
 
-            <div className="flex cenhor cenver w-100 gap20 mb-30">
+            <div className="flex cenhor cenver w-100" style={styles.formRow}>
                 <div className="flex f-col w-100 gap10">
                     <label style={{ color: "white" }}>Giới tính</label>
-                    <div className="flex w-100 gap20">
+                    <div className={`flex w-100 ${isMobile ? "f-col" : ""} gap20`}>
                         <div className="flex gap10">
                             <input
                                 type="radio"
@@ -161,21 +168,14 @@ function ProfileForm() {
                         </div>
                     </div>
                 </div>
-                {/* <div className="flex f-col w-100 gap10">
-                    <label style={{ color: "white" }}>Mật khẩu</label>
-                    <input
-                        style={{
-                            padding: "2%",
-                            border: "1px solid transparent",
-                            borderRadius: "7px",
-                        }}
-                        type="password"
-                        className="w-100"
-                    />
-                </div> */}
             </div>
-            <div className="flex cenhor cenver w-100 gap20 mt-50">
-                <button onClick={handleSubmit} className="btn_cus" id="more_films">
+            <div className="flex cenhor cenver w-100 gap20" style={styles.buttonContainer}>
+                <button 
+                    onClick={handleSubmit} 
+                    className="btn_cus" 
+                    id="more_films"
+                    style={{ width: isMobile ? "100%" : "auto" }}
+                >
                     <p className="text_upper">Cập nhật</p>
                 </button>
             </div>
