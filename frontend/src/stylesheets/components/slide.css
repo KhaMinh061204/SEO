@@ -1,4 +1,4 @@
-.header_img_back{
+.header_img_back {
     filter: brightness(50%);
     background-position: center;
     background-size: cover;
@@ -11,68 +11,45 @@
     transition: 0.25s;
 }
 
-#img1{
+#img1 {
     opacity: 1;
     animation: aniImg1 20s infinite;
 }
-#img2{
-    opacity:0;
+
+#img2 {
+    opacity: 0;
     animation: aniImg2 20s infinite;
 }
-#img3{
+
+#img3 {
     opacity: 0;
     animation: aniImg3 20s infinite;
 }
 
 @keyframes aniImg1 {
-    0% {
-      opacity: 1;
-    }
-    33% {
-      opacity: 0;
-    }
-    66% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
+    0% { opacity: 1; }
+    33% { opacity: 0; }
+    66% { opacity: 0; }
+    100% { opacity: 1; }
 }
 
 @keyframes aniImg2 {
-  0% {
-    opacity: 0;
-  }
-  33% {
-    opacity: 1;
-  }
-  66% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 0;
-  }
-
+    0% { opacity: 0; }
+    33% { opacity: 1; }
+    66% { opacity: 0; }
+    100% { opacity: 0; }
 }
 
 @keyframes aniImg3 {
-  0% {
-    opacity: 0;
-  }
-  33% {
-    opacity: 0;
-  }
-  66% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
+    0% { opacity: 0; }
+    33% { opacity: 0; }
+    66% { opacity: 1; }
+    100% { opacity: 0; }
 }
 
 .slider-container {
     position: relative;
-    width: 100%;
+    width: 100vw;
     height: 100vh;
     overflow: hidden;
 }
@@ -98,20 +75,19 @@
 
 .text-content {
     position: absolute;
-    left: 3%;        /* Giảm từ 8% xuống 5% */
+    left: 3%;
     bottom: 15%;
     z-index: 2;
     color: white;
-    max-width: 900px; /* Tăng max-width một chút để đảm bảo text không bị wrap */
+    max-width: 900px;
 }
 
 .text-content h1 {
     font-size: 52px;
-    margin: 0 0 24px 0;
+    margin: 0 0 24px -30px;
     line-height: 1;
     font-weight: 700;
     letter-spacing: -1px;
-    margin-left: -30px; /* Thêm negative margin để tiêu đề thụt vào một chút */
 }
 
 .text-content p {
@@ -131,7 +107,7 @@
 
 .video-player {
     height: 100%;
-    width:  40%;
+    width: 40%;
     object-fit: cover;
     transition: transform 0.5s ease-in-out;
     margin: auto;
@@ -203,13 +179,13 @@
 }
 
 .slide-btn {
-    position:absolute;
+    position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 80px;  /* Increased from 45px */
-    height: 80px; /* Increased from 45px */
-    background-color: rgba(0, 0, 0, 0.3); /* Added semi-transparent background */
-    border-radius: 50%;  /* Make it circular */
+    width: 80px;
+    height: 80px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
     z-index: 1000;
     border: none;
     cursor: pointer;
@@ -231,8 +207,8 @@
 
 .slide-btn:hover {
     opacity: 1;
-    background-color: rgba(0, 0, 0, 0.6); /* Darker on hover */
-    transform: translateY(-50%) scale(1.1); /* Slight scale up on hover */
+    background-color: rgba(0, 0, 0, 0.6);
+    transform: translateY(-50%) scale(1.1);
 }
 
 .slide-btn.left {
@@ -244,7 +220,7 @@
 }
 
 .controls-group {
-    position:absolute;
+    position: absolute;
     bottom: 40px;
     right: 40px;
     z-index: 1000;
@@ -274,28 +250,27 @@
     margin-right: 5px;
 }
 
-/* Remove old play-pause styles */
 .play-pause {
     position: static;
 }
 
 .buttons {
     display: flex;
-    align-items: center;  /* Center buttons vertically */
-    flex-direction: row; /* Ensure horizontal layout */
-    margin-left: 15px;   /* Push buttons to the right */
+    align-items: center;
+    flex-direction: row;
+    margin-left: 15px;
 }
 
 .btn-book, .btn-more {
-    padding: 12px 24px;  /* Adjusted padding to be more compact */
-    font-size: 14px;     /* Slightly smaller font */
+    padding: 12px 24px;
+    font-size: 14px;
     border-radius: 4px;
     font-weight: 600;
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    white-space: nowrap; /* Prevent text wrapping */
-    height: 45px;        /* Fixed height for both buttons */
+    white-space: nowrap;
+    height: 45px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -319,4 +294,195 @@
 
 .btn-more:hover {
     background: rgba(255,255,255,0.1);
+}
+
+/* Responsive Breakpoints */
+@media screen and (max-width: 1200px) {
+    .text-content {
+        max-width: 800px;
+    }
+
+    .text-content h1 {
+        font-size: 46px;
+        margin-left: -20px;
+    }
+
+    .video-player {
+        width: 50%;
+    }
+
+    .slide-btn {
+        width: 70px;
+        height: 70px;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .text-content {
+        max-width: 600px;
+        bottom: 12%;
+    }
+
+    .text-content h1 {
+        font-size: 40px;
+        margin-left: -15px;
+        margin-bottom: 20px;
+    }
+
+    .text-content p {
+        font-size: 15px;
+        margin-bottom: 28px;
+    }
+
+    .video-player {
+        width: 60%;
+    }
+
+    .slide-btn {
+        width: 60px;
+        height: 60px;
+    }
+
+    .controls-group {
+        bottom: 30px;
+        right: 30px;
+    }
+
+    .btn-book, .btn-more {
+        padding: 10px 20px;
+        font-size: 13px;
+        height: 40px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+
+    .slider-wrapper {
+        width: 100%;
+    }
+    .text-content {
+        left: 5%;
+        bottom: 10%;
+        max-width: 90%;
+    }
+
+    .text-content h1 {
+        font-size: 32px;
+        margin-left: 0;
+        margin-bottom: 16px;
+    }
+
+    .text-content p {
+        font-size: 14px;
+        margin-bottom: 24px;
+        max-width: 100%;
+    }
+
+    .video-player {
+        width: 80%;
+    }
+
+    .slide-btn {
+        width: 50px;
+        height: 50px;
+    }
+
+    .slide-btn.left {
+        left: 15px;
+    }
+
+    .slide-btn.right {
+        right: 15px;
+    }
+
+    .controls-group {
+        bottom: 25px;
+        right: 25px;
+        gap: 10px;
+    }
+    .slide-indicators {
+        bottom: 10px;
+    }
+    .indicator {
+        width: 25px;
+    }
+
+    .indicator.active {
+        width: 40px;
+    }
+
+    .buttons {
+        margin-left: 10px;
+    }
+
+    .btn-book, .btn-more {
+        padding: 8px 16px;
+        font-size: 12px;
+        height: 36px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .text-content {
+        left: 4%;
+        bottom: 8%;
+    }
+
+    .text-content h1 {
+        font-size: 28px;
+        margin-bottom: 12px;
+    }
+
+    .text-content p {
+        font-size: 13px;
+        margin-bottom: 20px;
+    }
+
+    .video-player {
+        width: 100%;
+    }
+
+    .slide-btn {
+        width: 40px;
+        height: 40px;
+    }
+
+    .slide-btn.left {
+        left: 10px;
+    }
+
+    .slide-btn.right {
+        right: 10px;
+    }
+
+    .controls-group {
+        bottom: 20px;
+        right: 20px;
+        gap: 8px;
+    }
+
+    .indicator {
+        width: 20px;
+        height: 2px;
+    }
+
+    .indicator.active {
+        width: 35px;
+    }
+
+    .buttons {
+        margin-left: 8px;
+    }
+
+    .btn-book, .btn-more {
+        padding: 6px 12px;
+        font-size: 11px;
+        height: 32px;
+        letter-spacing: 0.3px;
+    }
+
+    .control-btn {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
 }
