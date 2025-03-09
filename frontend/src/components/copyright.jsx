@@ -18,7 +18,7 @@ function copyRight(){
             <div className="nav f-col endver" style={{"gap":"10px"}}>
                 <h2 className="text_upper">Tổng đài hỗ trợ</h2>
                 <div className="flex gap15">
-                    <img src={phone}/>
+                    <img src={phone} height={48}/>
                     <h2>012 3456 7890</h2>
                 </div>
             </div>
