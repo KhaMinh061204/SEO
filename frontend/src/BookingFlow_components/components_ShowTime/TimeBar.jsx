@@ -2,23 +2,35 @@ import React, { useEffect, useRef, useState } from "react";
 import "./TimeBar.css";
 
 // Generate actual dates dynamically instead of hardcoded ones
-const getDaysArray = () => {
-  const days = [];
-  const dayNames = ["Chủ Nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"];
+// const getDaysArray = () => {
+//   const days = [];
+//   const dayNames = ["Chủ Nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"];
   
-  const today = new Date();
+//   const today = new Date();
   
-  for (let i = 0; i < 14; i++) { // Show next 14 days
-    const date = new Date();
-    date.setDate(today.getDate() + i);
+//   for (let i = 0; i < 14; i++) { // Show next 14 days
+//     const date = new Date();
+//     date.setDate(today.getDate() + i);
     
-    days.push({
-      day: dayNames[date.getDay()],
-      date: date.toISOString().split('T')[0]
-    });
-  }
+//     days.push({
+//       day: dayNames[date.getDay()],
+//       date: date.toISOString().split('T')[0]
+//     });
+//   }
   
-  return days;
+//   return days;
+// };
+
+const getDaysArray = () => {
+  return [
+    { day: "Thứ 2", date: "2024-12-13" },
+    { day: "Thứ 3", date: "2024-12-14" },
+    { day: "Thứ 4", date: "2024-12-15" },
+    { day: "Thứ 5", date: "2024-12-16" },
+    { day: "Thứ 6 ", date: "2024-12-17" },
+    { day: "Thứ 7", date: "2024-12-18" },
+    { day: "Chủ nhật", date: "2024-12-19" }
+  ];
 };
 
 const TimeBar = ({ onDateSelect }) => {
