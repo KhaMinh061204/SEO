@@ -9,14 +9,14 @@ import ContentNotifyPage from "../layouts/content-notification-page";
 function Profile(){
     return(
         <>
-        {/* <Navbar/> */}
+        <Navbar/>
             <Routes>
                 <Route path="/myorder" element={<ContentMyOrderPage />}/>
                 <Route path="/history" element={<ContentTransacPage />}/>
                 <Route path="/info" element={<ContentProfilePage />}/>
                 <Route path="/notify" element={<ContentNotifyPage />}/>
             </Routes>
-        {/* <Footer/> */}
+        <Footer/>
         </>
     )
 }

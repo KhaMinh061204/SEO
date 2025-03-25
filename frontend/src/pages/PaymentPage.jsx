@@ -14,9 +14,9 @@ function PaymentPage() {
   }, [movie_id, selectedDate, selectedTime, selectedTheater, selectedRoomId, selectedSeats,navigate]);
   return (
     <>
-    {/* <Navbar></Navbar> */}
-    <Payment></Payment>
-    {/* <Footer></Footer> */}
+    <Navbar></Navbar>
+      <Payment></Payment>
+    <Footer></Footer>
     </>
   )
 }
