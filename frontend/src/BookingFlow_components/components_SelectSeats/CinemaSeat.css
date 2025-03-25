@@ -63,7 +63,10 @@
     background-color: #6c5ce7;
     color: #fff;
   }
-  
+  .seat.locked {
+    background-color: #ffc107; 
+    cursor: not-allowed;
+  }
   .seat.booked {
     background-color: #636e72;
     color: #fff;
