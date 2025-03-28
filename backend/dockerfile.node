@@ -1,0 +1,14 @@
+FROM node:16
+WORKDIR /app
+COPY ./configs ./
+COPY ./controllers ./
+COPY ./middlewares ./
+COPY ./models ./
+COPY ./routers ./
+COPY ./utils ./
+COPY ./app.js ./
+COPY ./package.json ./
+COPY ./.env ./
+RUN npm i
+EXPOSE 5000
+CMD ["npm", "start"]

@@ -1,0 +1,9 @@
+FROM node:16
+WORKDIR /app
+COPY ./public ./
+COPY ./src ./ 
+COPY ./index.html ./
+COPY ./package.json ./
+RUN npm i
+EXPOSE 3001
+CMD ["npm","run"]
