@@ -1,10 +1,19 @@
+import { json } from "express";
 import Movie from "../models/movie-model.js";
+import redisClient from "../redisClient.js";
 
 export const getAllMovies = async (req, res, next) => {
     let movies;
   
     try {
+      const cachedMovie=await redisClient.get("movie:list:all");
+      if (cachedMovie){
+        console.log("lấy ds fim từ cache");
+        const userData=JSON.parse(cachedMovie);
+        return res.status(200).json(userData);
+      }
       movies = await Movie.find();
+      await redisClient.setEx("movie:list:all",3600,JSON.stringify(movies));
     } catch (err) {
       return console.log(err);
     }
@@ -20,7 +29,13 @@ export const getAllMovies = async (req, res, next) => {
   
     try {
       // Sử dụng phương thức limit(6) để lấy chỉ 6 bộ phim đầu tiên
+      const cachedMovie= await redisClient.get("movies:list:homepage")
+      if(cachedMovie){
+        const moviesList = JSON.parse(cachedMovie);
+        return res.status(200).json(moviesList);
+      }
       movies = await Movie.find().limit(8);
+      await redisClient.setEx("movies:list:homepage", 3600, JSON.stringify(movies));
     } catch (err) {
       return console.log(err);
     }

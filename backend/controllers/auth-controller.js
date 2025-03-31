@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import { sendEmail } from '../utils/email.js';
 import { generateOTP } from '../utils/OTP.js';
 import dotenv from 'dotenv';
-
+import redisClient from '../redisClient.js';
 dotenv.config();
 
 // Đăng nhập login tài khoản mới
@@ -13,9 +13,27 @@ export const loginAdmin = async (req, res) => {
     try {
         const { username, password } = req.body;
 
-        // Kiểm tra input
         if (!username || !password) {
             return res.status(400).json({ message: 'Vui lòng nhập tên người dùng và mật khẩu' });
+        }
+        const cachedUser = await redisClient.get(`user:${username}`);
+                // Kiểm tra input
+        if (cachedUser) {
+            const userData = JSON.parse(cachedUser);
+        // Kiểm tra mật khẩu đã được lưu hash
+        const isMatch = await bcrypt.compare(password, userData.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Thông tin đăng nhập không hợp lệ' });
+        }
+
+        // Nếu hợp lệ, tạo JWT và trả về
+        const token = jwt.sign({ id: userData.id, role: userData.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
+
+        return res.status(200).json({
+            message: 'Đăng nhập thành công!',
+            token,
+            account: { id: userData.id, role: userData.role, username: userData.username }
+        });
         }
 
         // Tìm tài khoản trong database
@@ -34,6 +52,18 @@ export const loginAdmin = async (req, res) => {
         if (!isMatch) {
             return res.status(400).json({ message: 'Mật khẩu không đúng!' });
         }
+
+        // Lưu thông tin vào Redis Cache (trừ password)
+        await redisClient.setEx(
+            `user:${username}`,
+            3600, // Cache tồn tại trong 1 giờ
+            JSON.stringify({
+                id: account._id,
+                role: account.role,
+                username: account.username,
+                password: account.password // Có thể bỏ trường này nếu cần
+            })
+        );
 
         // Tạo JWT cho admin
         const token = jwt.sign(
@@ -115,6 +145,25 @@ export const login = async (req, res) => {
         if (!username || !password) {
             return res.status(400).json({ message: 'Vui lòng nhập tên người dùng và mật khẩu' });
         }
+        const cachedUser = await redisClient.get(`user:${username}`);
+                // Kiểm tra input
+        if (cachedUser) {
+            const userData = JSON.parse(cachedUser);
+        // Kiểm tra mật khẩu đã được lưu hash
+        const isMatch = await bcrypt.compare(password, userData.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Thông tin đăng nhập không hợp lệ' });
+        }
+
+        // Nếu hợp lệ, tạo JWT và trả về
+        const token = jwt.sign({ id: userData.id, role: userData.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
+
+        return res.status(200).json({
+            message: 'Đăng nhập thành công!',
+            token,
+            account: { id: userData.id, role: userData.role, username: userData.username }
+        });
+        }
 
         // Tìm tài khoản
         const account = await Account.findOne({ username });
@@ -129,6 +178,17 @@ export const login = async (req, res) => {
             return res.status(400).json({ message: 'Thông tin đăng nhập không hợp lệ' });
         }
 
+        await redisClient.setEx(
+            `user:${username}`,
+            3600, // Cache tồn tại trong 1 giờ
+            JSON.stringify({
+                id: account._id,
+                role: account.role,
+                username: account.username,
+                password: account.password // Có thể bỏ trường này nếu cần
+            })
+        );
+        console.log('redis');
         // Tạo JWT
         const token = jwt.sign(
             { id: account._id, role: account.role },
@@ -154,6 +214,14 @@ export const getProfile = async (req, res) => {
     try {
         const accountId = req.user.id; // ID từ JWT
 
+        const cachedUser = await redisClient.get(`user:profile:${accountId}`);
+
+        if(cachedUser){
+            console.log("lấy thông tin từ cache");
+            const userData = JSON.parse(cachedUser);
+            return res.status(200).json(userData);
+            
+        }
         const account = await Account.findById(accountId).populate('member');
         if (!account) {
             return res.status(404).json({ message: 'Không tìm thấy tài khoản' });
@@ -167,7 +235,7 @@ export const getProfile = async (req, res) => {
             gender: account.member.gender,
             avatar: account.member.avatar,
         };
-
+        await redisClient.setEx(`user:profile:${accountId}`, 3600, JSON.stringify(userProfile));
         res.json(userProfile);
 
     } catch (err) {
@@ -338,7 +406,7 @@ export const updateProfile = async (req, res) => {
             updatedFields,
             { new: true, runValidators: true }
         );
-
+        await redisClient.del('users');
         res.status(200).json({
             message: 'Cập nhật thông tin thành công',
             updatedProfile: updatedMember,
