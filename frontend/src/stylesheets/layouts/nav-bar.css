@@ -77,6 +77,7 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
 }
 
 #login {
@@ -163,8 +164,90 @@ header {
     color: black;
 }
 
+/* Mobile Menu Styles */
+.mobile-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0px;
+    margin: 1% 4% 0 4%;
+    width: 250px;
+    background-color: white;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 0.5rem;
+    z-index: 1000;
+}
+
+.mobile-menu.show {
+    display: block;
+}
+
+.mobile-menu-items {
+    list-style: none;
+    padding: 0;
+}
+
+.mobile-menu-items li {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    color: black;
+    font-size: 14px;
+}
+
+.mobile-menu-items li:last-child {
+    border-bottom: none;
+}
+
+.mobile-menu-items li:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.mobile-menu-button {
+    background: transparent;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    display: none;
+}
+
+.mobile-login-btn {
+    width: 100%;
+    padding: 0.5rem;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.mobile-login-btn:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.mobile-search {
+    padding: 0.5rem 0;
+}
+
 /* Responsive Breakpoints */
 @media screen and (max-width: 1200px) {
+    .mobile-menu-button {
+        display: block;
+    }
+
+    #login, .center_ul {
+        display: none;
+    }
+
+    .wrap_auth_btn {
+        justify-content: flex-end;
+    }
+
     .inp_search {
         width: 28dvw;
     }
@@ -191,141 +274,24 @@ header {
     .logo {
         font-size: 26px;
     }
-
-    .center_ul {
-        gap: 20px;
-        font-size: 15px;
-    }
-}
-
-@media screen and (max-width: 800px) {
-    .logo {
-        font-size: 20px;
-    }
-
-    .wrap_right_nav {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 0px;
-    }
-
-    header {
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .inp_search {
-        width: 22dvw;
-    }
-
-    .center_ul {
-        gap: 15px;
-    }
-}
-
-@media screen and (max-width: 768px) {
-
-    .wrap_auth_btn {
-        justify-content: right;
-        width: 100%;
-        position: relative;
-        top: -8px;
-    }
-
-    .wrap_header_nav {
-        margin: 2% 2% 0 2%;
-        padding: 10px;
-        flex-wrap: wrap;
-    }
-
-    .center_ul {
-        column-gap: 30px;
-        row-gap: 5px;
-        flex-wrap: wrap;
-        margin: 5px 0;
-        font-size: 14px;
-    }
-
-    #login {
-        font-size: 12px;
-        border-radius: 50px;
-        color: white !important;
-        background-color: black;
-        padding: 8px 15px;
-    }
-
-    #signup {
-        display: none;
-    }
-
-    .inp_search {
-        width: 180px;
-        padding: 2%;
-        height: 34px;
-    }
-
-    .search_btn {
-        padding: 2%;
-        height: 34px;
-    }
-
-    .wrap_right_nav {
-        padding-top: 5px;
-    }
-
-    .ham_btn {
-        width: 25px;
-        height: 35px;
-    }
 }
 
 @media screen and (max-width: 480px) {
     .wrap_header_nav {
         margin: 0;
-        padding: 0 8px;
+        padding: 0.5rem;
     }
 
-    .wrap_right_nav {
-        padding-top: 3px;
+    .mobile-menu {
+        width: 200px;
     }
 
-    .wrap_center_ul {
-        margin-top: 0;
-    }
-
-    .center_ul {
-        gap: 12px;
+    .mobile-menu-items {
         font-size: 13px;
     }
 
-    .inp_search {
-        width: 140px;
-        height: 32px;
+    .mobile-login-btn {
         font-size: 13px;
-    }
-
-    .search_btn {
-        height: 32px;
-    }
-
-    #login {
-        font-size: 11px;
-        padding: 6px 12px;
-    }
-
-    .logo {
-        font-size: 18px;
-    }
-
-    .ham_btn {
-        width: 22px;
-        height: 32px;
-    }
-
-    #user_comp {
-        padding: 4px 8px;
-        font-size: 13px;
+        padding: 0.4rem;
     }
 }
