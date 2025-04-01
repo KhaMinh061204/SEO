@@ -22,7 +22,7 @@ function contentProductPage () {
       // Nếu ở trang chủ, gọi API lấy phim trang chủ
       getMoviesInHomepage()
         .then(data => {
-          setMovies(data.movies)
+          setMovies(data)
         })
         .catch(err => console.log(err))
 

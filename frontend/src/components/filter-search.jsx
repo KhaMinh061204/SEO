@@ -63,7 +63,7 @@ function FilterSearch(prop) {
         const fetchMovies = async () => {
             try {
                 const data = await getMoviesInHomepage();
-                setMovies(data.movies);
+                setMovies(data);
             } catch (err) {
                 console.error("Error fetching movies:", err);
             }
