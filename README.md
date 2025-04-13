@@ -17,7 +17,7 @@ Ceecin Movie Ticket Booking Website là một website giúp người dùng dễ 
 
 ## 🚀 Cài đặt và chạy dự án
 ### 🔧 1. Clone repository
-git clone https://github.com/KhaMinh061204/Ceecin-Movie-Ticket-Booking-Website.git
+git clone https://github.com/KhaMinh061204/SEO.git
 ### 📦 2. Cài đặt và chạy
 **Frontend**: 
 - cd frontend
