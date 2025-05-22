@@ -1,7 +1,7 @@
 # Ceecin Movie Ticket Booking Website
 
 ## Giới thiệu
-Ceecin Movie Ticket Booking Website là một website giúp người dùng dễ dàng đặt vé xem phim trực tuyến, lựa chọn rạp, suất chiếu và chỗ ngồi theo sở thích.
+Ceecin Movie Ticket Booking Website là một website giúp người dùng dễ dàng đặt vé xem phim trực tuyến, lựa chọn rạp, suất chiếu và chỗ ngồi theo sở thích. 
 
 ## Tính năng chính
 - 📅 Xem thông tin và lịch chiếu phim
